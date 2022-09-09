@@ -15,11 +15,12 @@ class Lexer:
         self.token_file = token_file
         self.lexemes = []
         self.tokens = []
+        self.line = 1
 
     def execute(self):
         self.scan(self.koral_file)
         self.evaluate(self.lexemes, self.tokens)
-        # self.generate_token_base(self.tokens, self.token_file)
+        self.generate_token_base(self.tokens, self.token_file)
 
     def scan(self, file):
         with open(file, 'r') as f:
@@ -45,36 +46,39 @@ class Lexer:
                     self.lexemes.append(lexeme)
                 self.lexemes.append('\n')
 
-    def post_process(self, tokens):
-        for token in tokens:
-            if token.type == 'Literal':
-                if token.value.isdigit():
-                    token.type = 'Numeric'
-                elif token.value[0] == '\'' or token.value[0] == '\"':
-                    token.type = 'String'
-                else:
-                    token.type = 'Identifier'
-
     def determine_type(self, lexeme):
-        digits = '0123456789'
+        if lexeme in KEYWORDS:
+            return 'Keyword'
+
         type = {
-            '=': 'Punctuator',
-            '\'': 'Punctuator',
-            '\"': 'Punctuator',
             '+': 'Operator',
             '-': 'Operator',
             '*': 'Operator',
-            '/': 'Operator'
+            '/': 'Operator',
+            '=': 'Operator',
+            '(': 'Punctuator',
+            ')': 'Punctuator'
         }.get(lexeme, 'Identifier')
+
+        if type == 'Identifier':
+            if lexeme[0] == '\'' or lexeme[0] == '\"':
+                return 'String'
+            try:
+                float(lexeme)
+            except:
+                return type
+            return 'Numeric'
+
         return type
 
     def evaluate(self, lexemes, tokens):
         for lexeme in lexemes:
+            if lexeme == '\n':
+                self.line += 1
+                continue
+            
             type = self.determine_type(lexeme)
-
-            if not type == 0:
-                tokens.append(Token(type, lexeme))
-        self.post_process(tokens)
+            tokens.append(Token(type, lexeme))
 
     def generate_token_base(self, tokens, token_base):
         token_list = []
@@ -89,6 +93,5 @@ def run():
 
     lexer = Lexer(koral_file, token_file)
     lexer.execute()
-    print(lexer.lexemes)
 
 run()

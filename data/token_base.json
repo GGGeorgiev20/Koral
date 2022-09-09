@@ -5,15 +5,23 @@
     },
     {
         "type": "Identifier",
-        "value": "answer"
+        "value": "first"
     },
     {
-        "type": "Punctuator",
+        "type": "Operator",
         "value": "="
     },
     {
-        "type": "Identifier",
-        "value": "4+1"
+        "type": "Numeric",
+        "value": "5"
+    },
+    {
+        "type": "Operator",
+        "value": "-"
+    },
+    {
+        "type": "Numeric",
+        "value": "3"
     },
     {
         "type": "Keyword",
@@ -21,14 +29,22 @@
     },
     {
         "type": "Identifier",
-        "value": "test"
+        "value": "text"
     },
     {
-        "type": "Punctuator",
+        "type": "Operator",
         "value": "="
     },
     {
         "type": "String",
-        "value": "\"test\""
+        "value": "\"hello\""
+    },
+    {
+        "type": "Keyword",
+        "value": "say"
+    },
+    {
+        "type": "Identifier",
+        "value": "text"
     }
 ]

@@ -1,2 +1,3 @@
-var answer = 4.7 + 1 + 2.3
-say "test"
+var first = 5 - 3
+var text = "hello"
+say text
