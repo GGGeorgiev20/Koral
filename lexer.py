@@ -1,42 +1,49 @@
 import os
 import json
 
+PUNCTUATION = [ '+', '-', '*', '/', '=', '(', ')' ]
+KEYWORDS = ['var', 'say']
+
 class Token:
     def __init__(self, type, value):
         self.type = type
         self.value = value
 
-class Error:
-    def __init__(self, file, line, message):
-        self.file = file
-        self.line = line
-        self.message = f"    File \"{os.path.join(os.getcwd(), file)}\", line {self.line} {message}"
-
 class Lexer:
-    def __init__(self, bace_file, token_file):
-        self.bace_file = bace_file
+    def __init__(self, koral_file, token_file):
+        self.koral_file = koral_file
         self.token_file = token_file
         self.lexemes = []
         self.tokens = []
-        self.errors = []
-        self.line = 1
-        self.is_defining = False
 
     def execute(self):
-        self.scan(self.bace_file)
+        self.scan(self.koral_file)
         self.evaluate(self.lexemes, self.tokens)
-        self.generate_token_base(self.tokens, self.token_file)
+        # self.generate_token_base(self.tokens, self.token_file)
 
     def scan(self, file):
         with open(file, 'r') as f:
             for line in f.readlines():
+                indexes = {}
+
+                line = line.replace(' ', '')
+                for lex in PUNCTUATION:
+                    while lex in line:
+                        indexes[line.find(lex)] = lex
+                        line = line.replace(lex, '¿', 1)
+                
+                for keyword in KEYWORDS:
+                    while keyword in line:
+                        indexes[line.find(keyword)] = keyword
+                        line = line.replace(keyword, '¿', 1)
+
+                while '¿' in line:
+                    for index in sorted(indexes):
+                        line = line.replace('¿', f' {indexes[index]} ', 1)
+
                 for lexeme in line.split():
                     self.lexemes.append(lexeme)
                 self.lexemes.append('\n')
-
-    # def pre_process(self, lexemes):
-    #     for index, lexeme in enumerate(lexemes):
-    #         pass
 
     def post_process(self, tokens):
         for token in tokens:
@@ -49,8 +56,8 @@ class Lexer:
                     token.type = 'Identifier'
 
     def determine_type(self, lexeme):
+        digits = '0123456789'
         type = {
-            'var': 'Keyword',
             '=': 'Punctuator',
             '\'': 'Punctuator',
             '\"': 'Punctuator',
@@ -59,22 +66,9 @@ class Lexer:
             '*': 'Operator',
             '/': 'Operator'
         }.get(lexeme, 'Identifier')
-
-        if lexeme == '\n':
-            self.line += 1
-            self.is_defining = False
-            return 0
-
-        if self.is_defining == True and type == 'Identifier':
-            type = 'Literal'
-        
-        if type == 'Identifier':
-            self.is_defining = True
-
         return type
 
     def evaluate(self, lexemes, tokens):
-        # self.pre_process(lexemes)
         for lexeme in lexemes:
             type = self.determine_type(lexeme)
 
@@ -87,13 +81,14 @@ class Lexer:
         with open(token_base, 'w') as f:
             for token in tokens:
                 token_list.append({"type": token.type, "value": token.value})
-            json.dump(token_list, f, indent = 4)
+            json.dump(token_list, f, indent=4)
 
 def run():
-    bace_file = 'main.kor'
+    koral_file = 'main.kor'
     token_file = os.path.join('data', 'token_base.json')
 
-    lexer = Lexer(bace_file, token_file)
+    lexer = Lexer(koral_file, token_file)
     lexer.execute()
+    print(lexer.lexemes)
 
 run()

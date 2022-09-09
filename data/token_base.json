@@ -12,6 +12,22 @@
         "value": "="
     },
     {
+        "type": "Identifier",
+        "value": "4+1"
+    },
+    {
+        "type": "Keyword",
+        "value": "var"
+    },
+    {
+        "type": "Identifier",
+        "value": "test"
+    },
+    {
+        "type": "Punctuator",
+        "value": "="
+    },
+    {
         "type": "String",
         "value": "\"test\""
     }
