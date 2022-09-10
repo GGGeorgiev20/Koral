@@ -1,15 +1,11 @@
 [
     {
-        "type": "Keyword",
-        "value": "var"
-    },
-    {
-        "type": "Identifier",
-        "value": "first"
+        "type": "Numeric",
+        "value": "5"
     },
     {
         "type": "Operator",
-        "value": "="
+        "value": "+"
     },
     {
         "type": "Numeric",
@@ -17,34 +13,26 @@
     },
     {
         "type": "Operator",
+        "value": "+"
+    },
+    {
+        "type": "Numeric",
+        "value": "2"
+    },
+    {
+        "type": "Operator",
         "value": "-"
     },
     {
         "type": "Numeric",
-        "value": "3"
-    },
-    {
-        "type": "Keyword",
-        "value": "var"
-    },
-    {
-        "type": "Identifier",
-        "value": "text"
+        "value": "4"
     },
     {
         "type": "Operator",
-        "value": "="
+        "value": "-"
     },
     {
-        "type": "String",
-        "value": "\"hello\""
-    },
-    {
-        "type": "Keyword",
-        "value": "say"
-    },
-    {
-        "type": "Identifier",
-        "value": "text"
+        "type": "Numeric",
+        "value": "5"
     }
 ]

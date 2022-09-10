@@ -1,3 +1,1 @@
-var first = 5 - 3
-var text = "hello"
-say text
+5 + 5 + 2 - 4 - 5

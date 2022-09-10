@@ -1,13 +1,13 @@
-import os
 import json
 
 PUNCTUATION = [ '+', '-', '*', '/', '=', '(', ')' ]
-KEYWORDS = ['var', 'say']
+KEYWORDS = [ 'var', 'say' ]
 
 class Token:
-    def __init__(self, type, value):
+    def __init__(self, type, value, line):
         self.type = type
         self.value = value
+        self.line = line
 
 class Lexer:
     def __init__(self, koral_file, token_file):
@@ -78,7 +78,7 @@ class Lexer:
                 continue
             
             type = self.determine_type(lexeme)
-            tokens.append(Token(type, lexeme))
+            tokens.append(Token(type, lexeme, self.line))
 
     def generate_token_base(self, tokens, token_base):
         token_list = []
@@ -86,12 +86,3 @@ class Lexer:
             for token in tokens:
                 token_list.append({"type": token.type, "value": token.value})
             json.dump(token_list, f, indent=4)
-
-def run():
-    koral_file = 'main.kor'
-    token_file = os.path.join('data', 'token_base.json')
-
-    lexer = Lexer(koral_file, token_file)
-    lexer.execute()
-
-run()
