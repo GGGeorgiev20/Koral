@@ -1,7 +1,7 @@
 import json
 
 PUNCTUATION = [ '+', '-', '*', '/', '=', '(', ')' ]
-KEYWORDS = [ 'var', 'say' ]
+KEYWORDS = ['var', 'say', 'if', 'else']
 
 class Token:
     def __init__(self, type, value, line):
@@ -32,7 +32,7 @@ class Lexer:
                     while lex in line:
                         indexes[line.find(lex)] = lex
                         line = line.replace(lex, '¿', 1)
-                
+                    
                 for keyword in KEYWORDS:
                     while keyword in line:
                         indexes[line.find(keyword)] = keyword

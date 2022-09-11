@@ -1,5 +1,38 @@
 {
     "type": "Program",
-    "body": [],
+    "body": [
+        {
+            "type": "BinaryExpression",
+            "operator": "-",
+            "left": {
+                "type": "BinaryExpression",
+                "operator": "/",
+                "left": {
+                    "type": "BinaryExpression",
+                    "operator": "*",
+                    "left": {
+                        "type": "Literal",
+                        "value": "8",
+                        "raw": "8"
+                    },
+                    "right": {
+                        "type": "Literal",
+                        "value": "2",
+                        "raw": "2"
+                    }
+                },
+                "right": {
+                    "type": "Literal",
+                    "value": "4",
+                    "raw": "4"
+                }
+            },
+            "right": {
+                "type": "Literal",
+                "value": "7",
+                "raw": "7"
+            }
+        }
+    ],
     "sourceType": "script"
 }

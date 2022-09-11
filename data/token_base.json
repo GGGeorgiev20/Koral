@@ -1,19 +1,11 @@
 [
     {
         "type": "Numeric",
-        "value": "5"
+        "value": "8"
     },
     {
         "type": "Operator",
-        "value": "+"
-    },
-    {
-        "type": "Numeric",
-        "value": "5"
-    },
-    {
-        "type": "Operator",
-        "value": "+"
+        "value": "*"
     },
     {
         "type": "Numeric",
@@ -21,7 +13,7 @@
     },
     {
         "type": "Operator",
-        "value": "-"
+        "value": "/"
     },
     {
         "type": "Numeric",
@@ -33,6 +25,6 @@
     },
     {
         "type": "Numeric",
-        "value": "5"
+        "value": "7"
     }
 ]

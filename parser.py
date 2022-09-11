@@ -1,3 +1,4 @@
+import math
 import json
 
 class Error:
@@ -9,12 +10,8 @@ class Parser:
     def __init__(self, tokens, ast_file):
         self.ast_file = ast_file
         self.tokens = tokens
-        self.current = None
-        self.index = -1
         self.ast = {}
         self.errors = []
-        self.result = ''
-        self.advance()
 
     def parse(self):
         self.check_syntax()
@@ -22,8 +19,6 @@ class Parser:
 
     def check_syntax(self):
         lines = self.get_lines(self.tokens)
-        for line in lines:
-           print(self.generate_expression(line))
 
     def get_lines(self, tokens):
         result = []
@@ -34,10 +29,12 @@ class Parser:
     def generate_ast(self, ast_file):
         self.ast = {
             "type": "Program",
-            "body": [],
-            "sourceType": "script"
+            "body": []
         }
 
+        self.ast["body"].append(self.binary_expression(self.tokens))
+
+        self.ast["sourceType"] = "script"
         with open(ast_file, 'w') as f:
             json.dump(self.ast, f, indent=4)
 
@@ -52,29 +49,75 @@ class Parser:
                         "name": f"{name}"
                     },
                     "init": {
-                        "type": "Literal",
-                        "value": value,
-                        "raw": f"{value}"
+
                     }
                 }
             ],
             "kind": "var"
         }
 
-        self.ast['body'].append(variable)
+        return variable
 
-    def generate_expression(self, tokens, res=''):
-        result = res
-        result += f" {tokens[0].value}"
-        if tokens[0].value not in '+-' and res != '': 
-            result += ')'
-        if len(tokens) > 1:
-            result = self.generate_expression(tokens[1:], result)
+    def binary_expression(self, tokens):
+        template = {
+            "type": "BinaryExpression",
+            "operator": ""
+        }
+
+        operators = []
+        indexes = []
+        different_strength = False
+
+        has_low = False
+        has_high = False
+        for index, token in enumerate(tokens):
+            if token.type == "Operator":
+                if token.value in ['*', '/']:
+                    has_high = True
+                else:
+                    has_low = True
+                operators.append(token.value)
+                indexes.append(index)
+        
+        different_strength = has_low and has_high
+
+        middle = math.ceil((len(operators) - 1) / 2)
+        if operators[middle] in ['*', '/']:
+            if different_strength:
+                i = middle
+                found_middle = False
+                while i < len(operators):
+                    if operators[i] in ['+', '-']:
+                        middle = i
+                        found_middle = True
+                        break
+                    i += 1
+                if not found_middle:
+                    i = middle
+                    while i >= 0:
+                        if operators[i] in ['+', '-']:
+                            middle = i
+                            break
+                        i -= 1
+
+        operator = operators[middle]
+        left = self.expression(tokens[:indexes[middle]])
+        right = self.expression(tokens[indexes[middle] + 1:])
+
+        template['operator'] = operator
+        template['left'] = left
+        template['right'] = right
+
+        return template
+
+    def expression(self, tokens):
+        if len(tokens) == 1:
+            template = {
+                "type": "Literal",
+                "value": tokens[0].value,
+                "raw": tokens[0].value
+            }
         else:
-            result = '(' * result.count(')') + result[1:]
-        return result
+            template = self.binary_expression(tokens)
 
-    def advance(self):
-        self.index += 1
-        if self.index < len(self.tokens):
-            self.current = self.tokens[self.index]
+        return template
