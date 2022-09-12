@@ -1,0 +1,29 @@
+{
+    "type": "Program",
+    "body": [
+        {
+            "type": "BinaryExpression",
+            "operator": "+",
+            "left": {
+                "type": "BinaryExpression",
+                "operator": "*",
+                "left": {
+                    "type": "Literal",
+                    "value": "5",
+                    "raw": "5"
+                },
+                "right": {
+                    "type": "Literal",
+                    "value": "5",
+                    "raw": "5"
+                }
+            },
+            "right": {
+                "type": "Literal",
+                "value": "5",
+                "raw": "5"
+            }
+        }
+    ],
+    "sourceType": "script"
+}

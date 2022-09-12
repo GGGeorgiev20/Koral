@@ -1,7 +1,15 @@
 [
     {
         "type": "Numeric",
-        "value": "8"
+        "value": "10"
+    },
+    {
+        "type": "Operator",
+        "value": "-"
+    },
+    {
+        "type": "Numeric",
+        "value": "6"
     },
     {
         "type": "Operator",
@@ -17,7 +25,15 @@
     },
     {
         "type": "Numeric",
-        "value": "4"
+        "value": "6"
+    },
+    {
+        "type": "Operator",
+        "value": "+"
+    },
+    {
+        "type": "Numeric",
+        "value": "1"
     },
     {
         "type": "Operator",
@@ -25,6 +41,14 @@
     },
     {
         "type": "Numeric",
-        "value": "7"
+        "value": "4"
+    },
+    {
+        "type": "Operator",
+        "value": "/"
+    },
+    {
+        "type": "Numeric",
+        "value": "3"
     }
 ]
