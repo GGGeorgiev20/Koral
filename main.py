@@ -14,7 +14,7 @@ def main():
     parser.parse()
     if parser.errors:
         for error in parser.errors:
-            print(f'Error: {error.message} on line {error.line}')
+            print(error.message)
 
 if __name__ == '__main__':
     main()

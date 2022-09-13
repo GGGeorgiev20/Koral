@@ -2,17 +2,94 @@
     "type": "Program",
     "body": [
         {
-            "type": "BinaryExpression",
-            "operator": "+",
-            "left": {
-                "type": "Literal",
-                "value": "5",
-                "raw": "5"
-            },
-            "right": {
-                "type": "Literal",
-                "value": "5",
-                "raw": "5"
+            "type": "VariableDeclaration",
+            "declarations": [
+                {
+                    "type": "VariableDeclarator",
+                    "id": {
+                        "type": "Identifier",
+                        "name": "test"
+                    },
+                    "init": {
+                        "type": "BinaryExpression",
+                        "operator": "+",
+                        "left": {
+                            "type": "Literal",
+                            "value": 5,
+                            "raw": "5"
+                        },
+                        "right": {
+                            "type": "Literal",
+                            "value": 3,
+                            "raw": "3"
+                        }
+                    }
+                }
+            ],
+            "kind": "var"
+        },
+        {
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "CallExpression",
+                "callee": {
+                    "type": "Identifier",
+                    "name": "say"
+                },
+                "arguments": [
+                    {
+                        "type": "Literal",
+                        "value": "test",
+                        "raw": "\"test\""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "CallExpression",
+                "callee": {
+                    "type": "Identifier",
+                    "name": "main"
+                },
+                "arguments": [
+                    {
+                        "type": "Literal",
+                        "value": "args",
+                        "raw": "\"args\""
+                    },
+                    {
+                        "type": "Literal",
+                        "value": "args2",
+                        "raw": "\"args2\""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                    "type": "Identifier",
+                    "name": "test"
+                },
+                "right": {
+                    "type": "BinaryExpression",
+                    "operator": "-",
+                    "left": {
+                        "type": "Literal",
+                        "value": 7,
+                        "raw": "7"
+                    },
+                    "right": {
+                        "type": "Literal",
+                        "value": 21,
+                        "raw": "21"
+                    }
+                }
             }
         }
     ],

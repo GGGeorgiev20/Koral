@@ -1,10 +1,17 @@
 import math
 import json
+import os
+
+koral_file = 'main.kor'
 
 class Error:
-    def __init__(self, message, line):
-        self.message = message
-        self.line = line
+    def __init__(self, type, extra, line):
+        self.message = ''
+        with open(koral_file, 'r') as f:
+            lines = f.readlines()
+            self.message = f'   File "{os.path.abspath(koral_file)}", line {line}:'
+            self.message += f'\n\t{lines[line - 1]}'
+            self.message += f'   {type}: {extra}'
 
 class Parser:
     def __init__(self, tokens, ast_file):
@@ -15,10 +22,10 @@ class Parser:
 
     def parse(self):
         self.check_syntax()
-        self.generate_ast(self.ast_file)
+        self.generate_ast(self.ast_file, self.tokens)
 
     def check_syntax(self):
-        lines = self.get_lines(self.tokens)
+        pass
 
     def get_lines(self, tokens):
         result = []
@@ -26,13 +33,49 @@ class Parser:
             result.append([token for token in tokens if token.line == line])
         return result
 
-    def generate_ast(self, ast_file):
+    def get_short(self, tokens):
+        result = ''
+        for token in tokens:
+            result += token.type[0]
+        return result
+
+    def generate_ast(self, ast_file, tokens):
         self.ast = {
             "type": "Program",
             "body": []
         }
 
-        self.ast["body"].append(self.binary_expression(self.tokens))
+        lines = self.get_lines(tokens)
+
+        for line in lines:
+            short = self.get_short(line)
+            for index, token in enumerate(line):
+                if token.value == "var":
+                    var_value = short[index + 3:]
+                    if 'S' in var_value and 'N' in var_value:
+                        self.errors.append(Error("Syntax error", "Invalid addition, cannot add string and numeric types", token.line))
+                        return
+                    name = line[index + 1].value
+                    value = self.binary_expression(line[index + 3:])
+                    self.ast['body'].append(self.declare_variable(name, value))
+                if (token.type == 'Identifier' or token.value == "say") and index == 0:
+                    template = {
+                        "type": "ExpressionStatement",
+                        "expression": {}
+                    }
+                    if line[index + 1].value == '=':
+                        template['expression'] = self.assign_value(token.value, line[index + 2:])
+                    elif line[index + 1].value == '(':
+                        name = token.value
+                        args = []
+                        for arg in line[index + 2:]:
+                            if arg.value == ')':
+                                break
+                            if arg.value == ',':
+                                continue
+                            args.append(self.binary_expression([arg]))
+                        template['expression'] = self.call_function(name, *args)
+                    self.ast['body'].append(template)
 
         self.ast["sourceType"] = "script"
         with open(ast_file, 'w') as f:
@@ -48,17 +91,47 @@ class Parser:
                         "type": "Identifier",
                         "name": f"{name}"
                     },
-                    "init": {
-
-                    }
+                    "init": {}
                 }
             ],
             "kind": "var"
         }
 
-        return variable
+        variable['declarations'][0]['init'] = value
 
-    def binary_expression(self, tokens):
+        return variable
+    
+    def call_function(self, name, *args):
+        template = {
+            "type": "CallExpression",
+            "callee": {
+                "type": "Identifier",
+                "name": f"{name}"
+            },
+            "arguments": []
+        }
+
+        for arg in args:
+            template['arguments'].append(arg)
+
+        return template
+
+    def assign_value(self, variable, value):
+        template = {
+            "type": "AssignmentExpression",
+            "operator": "=",
+            "left": {
+                "type": "Identifier",
+                "name": f"{variable}"
+            },
+            "right": {}
+        }
+
+        template['right'] = self.binary_expression(value)
+
+        return template
+
+    def expression(self, tokens):
         template = {
             "type": "BinaryExpression",
             "operator": ""
@@ -101,8 +174,8 @@ class Parser:
                         i -= 1
 
         operator = operators[middle]
-        left = self.expression(tokens[:indexes[middle]])
-        right = self.expression(tokens[indexes[middle] + 1:])
+        left = self.binary_expression(tokens[:indexes[middle]])
+        right = self.binary_expression(tokens[indexes[middle] + 1:])
 
         template['operator'] = operator
         template['left'] = left
@@ -110,14 +183,28 @@ class Parser:
 
         return template
 
-    def expression(self, tokens):
+    def binary_expression(self, tokens):
         if len(tokens) == 1:
+            is_identifier = tokens[0].type == "Identifier"
+            try:
+                value = int(tokens[0].value)
+            except ValueError:
+                try:
+                    value = float(tokens[0].value)
+                except ValueError:
+                    if not is_identifier:
+                        value = tokens[0].value.replace('"', '')
+            if is_identifier:
+                return {
+                    "type": "Identifier",
+                    "name": f"{tokens[0].value}"
+                }
             template = {
                 "type": "Literal",
-                "value": tokens[0].value,
+                "value": value,
                 "raw": tokens[0].value
             }
         else:
-            template = self.binary_expression(tokens)
+            template = self.expression(tokens)
 
         return template

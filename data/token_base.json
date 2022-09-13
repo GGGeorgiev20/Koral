@@ -1,31 +1,19 @@
 [
     {
-        "type": "Numeric",
-        "value": "10"
+        "type": "Keyword",
+        "value": "var"
+    },
+    {
+        "type": "Identifier",
+        "value": "test"
     },
     {
         "type": "Operator",
-        "value": "-"
+        "value": "="
     },
     {
         "type": "Numeric",
-        "value": "6"
-    },
-    {
-        "type": "Operator",
-        "value": "*"
-    },
-    {
-        "type": "Numeric",
-        "value": "2"
-    },
-    {
-        "type": "Operator",
-        "value": "/"
-    },
-    {
-        "type": "Numeric",
-        "value": "6"
+        "value": "5"
     },
     {
         "type": "Operator",
@@ -33,7 +21,59 @@
     },
     {
         "type": "Numeric",
-        "value": "1"
+        "value": "3"
+    },
+    {
+        "type": "Keyword",
+        "value": "say"
+    },
+    {
+        "type": "Punctuator",
+        "value": "("
+    },
+    {
+        "type": "String",
+        "value": "\"test\""
+    },
+    {
+        "type": "Punctuator",
+        "value": ")"
+    },
+    {
+        "type": "Identifier",
+        "value": "main"
+    },
+    {
+        "type": "Punctuator",
+        "value": "("
+    },
+    {
+        "type": "String",
+        "value": "\"args\""
+    },
+    {
+        "type": "Punctuator",
+        "value": ","
+    },
+    {
+        "type": "String",
+        "value": "\"args2\""
+    },
+    {
+        "type": "Punctuator",
+        "value": ")"
+    },
+    {
+        "type": "Identifier",
+        "value": "test"
+    },
+    {
+        "type": "Operator",
+        "value": "="
+    },
+    {
+        "type": "Numeric",
+        "value": "7"
     },
     {
         "type": "Operator",
@@ -41,14 +81,6 @@
     },
     {
         "type": "Numeric",
-        "value": "4"
-    },
-    {
-        "type": "Operator",
-        "value": "/"
-    },
-    {
-        "type": "Numeric",
-        "value": "3"
+        "value": "21"
     }
 ]
