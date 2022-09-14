@@ -1,4 +1,4 @@
 var test = 5 + 3
 say("test")
 main("args", "args2")
-test = 7 - 21
+test = "kuche"

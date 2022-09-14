@@ -72,15 +72,7 @@
         "value": "="
     },
     {
-        "type": "Numeric",
-        "value": "7"
-    },
-    {
-        "type": "Operator",
-        "value": "-"
-    },
-    {
-        "type": "Numeric",
-        "value": "21"
+        "type": "String",
+        "value": "\"kuche\""
     }
 ]

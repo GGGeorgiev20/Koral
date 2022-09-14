@@ -5,27 +5,48 @@ import os
 koral_file = 'main.kor'
 
 class Error:
-    def __init__(self, type, extra, line):
+    def __init__(self, error_message, line):
         self.message = ''
         with open(koral_file, 'r') as f:
             lines = f.readlines()
             self.message = f'   File "{os.path.abspath(koral_file)}", line {line}:'
             self.message += f'\n\t{lines[line - 1]}'
-            self.message += f'   {type}: {extra}'
+            if len(lines) == line:
+                self.message += '\n'
+            self.message += f'   Syntax error: {error_message}'
 
 class Parser:
     def __init__(self, tokens, ast_file):
         self.ast_file = ast_file
         self.tokens = tokens
-        self.ast = {}
         self.errors = []
+        self.ast = {}
 
     def parse(self):
-        self.check_syntax()
+        self.check_syntax(self.tokens)
         self.generate_ast(self.ast_file, self.tokens)
 
-    def check_syntax(self):
-        pass
+    def check_syntax(self, tokens):
+        lines = self.get_lines(tokens)
+
+        for line in lines:
+            short = self.get_short(line)
+            for index, token in enumerate(line):
+                if index < len(line) - 1 and short[index] == short[index + 1]:
+                    type = token.type.lower()
+                    self.errors.append(Error(f"Unexpected {type}", token.line))
+                    return
+                if (token.type == 'Identifier' or token.value == "say") and index == 0:
+                    values = [current.value for current in line]
+                    left_parenthesis = '(' in values
+                    right_parenthesis = ')' in values
+                    if (left_parenthesis or right_parenthesis) and not (left_parenthesis and right_parenthesis):
+                        self.errors.append(Error("Missing opening or closing paranthesis", token.line))
+                        return
+                if token.type == 'String':
+                    if token.value[0] != token.value[-1]:
+                        self.errors.append(Error("Missing opening or closing quote", token.line))
+                        return
 
     def get_lines(self, tokens):
         result = []
@@ -53,7 +74,7 @@ class Parser:
                 if token.value == "var":
                     var_value = short[index + 3:]
                     if 'S' in var_value and 'N' in var_value:
-                        self.errors.append(Error("Syntax error", "Invalid addition, cannot add string and numeric types", token.line))
+                        self.errors.append(Error("Invalid addition", token.line))
                         return
                     name = line[index + 1].value
                     value = self.binary_expression(line[index + 3:])
