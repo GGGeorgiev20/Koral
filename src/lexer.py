@@ -1,7 +1,7 @@
 import json
 
 PUNCTUATION = [ '+', '-', '*', '/', '%', '=', ',', '(', ')' ]
-KEYWORDS = ['var', 'say', 'if', 'else']
+KEYWORDS = [ 'var' ]
 
 class Token:
     def __init__(self, type, value, line):

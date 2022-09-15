@@ -1,11 +1,31 @@
 [
     {
         "type": "Keyword",
-        "value": "say"
+        "value": "var"
     },
     {
-        "type": "Punctuator",
-        "value": "("
+        "type": "Identifier",
+        "value": "example"
+    },
+    {
+        "type": "Operator",
+        "value": "="
+    },
+    {
+        "type": "String",
+        "value": "\"HelloWorld!\""
+    },
+    {
+        "type": "Keyword",
+        "value": "var"
+    },
+    {
+        "type": "Identifier",
+        "value": "number"
+    },
+    {
+        "type": "Operator",
+        "value": "="
     },
     {
         "type": "Numeric",
@@ -13,11 +33,47 @@
     },
     {
         "type": "Operator",
-        "value": "+"
+        "value": "*"
     },
     {
         "type": "Numeric",
         "value": "5"
+    },
+    {
+        "type": "Operator",
+        "value": "*"
+    },
+    {
+        "type": "Numeric",
+        "value": "4"
+    },
+    {
+        "type": "Identifier",
+        "value": "say"
+    },
+    {
+        "type": "Punctuator",
+        "value": "("
+    },
+    {
+        "type": "Identifier",
+        "value": "example"
+    },
+    {
+        "type": "Punctuator",
+        "value": ")"
+    },
+    {
+        "type": "Identifier",
+        "value": "say"
+    },
+    {
+        "type": "Punctuator",
+        "value": "("
+    },
+    {
+        "type": "Identifier",
+        "value": "number"
     },
     {
         "type": "Punctuator",

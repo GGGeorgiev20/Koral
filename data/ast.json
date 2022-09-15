@@ -2,6 +2,60 @@
     "type": "Program",
     "body": [
         {
+            "type": "VariableDeclaration",
+            "declarations": [
+                {
+                    "type": "VariableDeclarator",
+                    "id": {
+                        "type": "Identifier",
+                        "name": "example"
+                    },
+                    "init": {
+                        "type": "Literal",
+                        "value": "HelloWorld!",
+                        "raw": "\"HelloWorld!\""
+                    }
+                }
+            ],
+            "kind": "var"
+        },
+        {
+            "type": "VariableDeclaration",
+            "declarations": [
+                {
+                    "type": "VariableDeclarator",
+                    "id": {
+                        "type": "Identifier",
+                        "name": "number"
+                    },
+                    "init": {
+                        "type": "BinaryExpression",
+                        "operator": "*",
+                        "left": {
+                            "type": "BinaryExpression",
+                            "operator": "*",
+                            "left": {
+                                "type": "Literal",
+                                "value": 5,
+                                "raw": "5"
+                            },
+                            "right": {
+                                "type": "Literal",
+                                "value": 5,
+                                "raw": "5"
+                            }
+                        },
+                        "right": {
+                            "type": "Literal",
+                            "value": 4,
+                            "raw": "4"
+                        }
+                    }
+                }
+            ],
+            "kind": "var"
+        },
+        {
             "type": "ExpressionStatement",
             "expression": {
                 "type": "CallExpression",
@@ -11,18 +65,24 @@
                 },
                 "arguments": [
                     {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Literal",
-                            "value": 5,
-                            "raw": "5"
-                        },
-                        "right": {
-                            "type": "Literal",
-                            "value": 5,
-                            "raw": "5"
-                        }
+                        "type": "Identifier",
+                        "name": "example"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "CallExpression",
+                "callee": {
+                    "type": "Identifier",
+                    "name": "say"
+                },
+                "arguments": [
+                    {
+                        "type": "Identifier",
+                        "name": "number"
                     }
                 ]
             }

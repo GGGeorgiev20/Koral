@@ -71,7 +71,7 @@ class Parser:
                     name = line[index + 1].value
                     value = self.binary_expression(line[index + 3:])
                     self.ast['body'].append(self.declare_variable(name, value))
-                if (token.type == 'Identifier' or token.value == "say") and index == 0:
+                if token.type == 'Identifier' and index == 0:
                     template = {
                         "type": "ExpressionStatement",
                         "expression": {}

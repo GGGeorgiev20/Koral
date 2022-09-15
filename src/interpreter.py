@@ -89,7 +89,7 @@ class Interpreter:
             if node['type'] == 'VariableDeclaration':
                 for variable in node['declarations']:
                     if variable['init']['type'] == 'Literal':
-                        value = variable['init']['raw']
+                        value = variable['init']['value']
                         type = self.get_variable_type(value)
                     elif variable['init']['type'] == 'Identifier':
                         variable_value = self.get_variable(variable['init']['name'])
@@ -124,7 +124,7 @@ class Interpreter:
                 elif node['expression']['type'] == 'CallExpression':
                     name = node['expression']['callee']['name']
                     args = node['expression']['arguments']
-                    arguments = []  
+                    arguments = []
 
                     for arg in args:
                         if arg['type'] == 'Literal':
