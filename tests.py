@@ -1,4 +1,6 @@
 import os
+import subprocess
+import sys
 
 python_file = 'main.py'
 koral_file = 'main.kor'
@@ -10,31 +12,33 @@ tests = []
 file_saves = [[]]
 
 class Test:
-    def __init__(self, *parameters):
-        self.parameters = parameters
+    def __init__(self, expected):
+        self.expected = expected
         self.index = len(tests) + 1
         tests.append(self)
 
     def check_success(self):
-        with open(ast_file, 'r') as ast:
-            with open(os.path.join(tests_folder, f"test_{self.index}.json"), 'r') as test:
-                expected = test.readlines()
-                for index, line in enumerate(ast.readlines()):
-                    if line != expected[index]:
-                        return False
-        return True
+        received = subprocess.run('python main.py main.kor', shell=True, stdout=subprocess.DEVNULL)
+        expected = self.expected
+        return received == expected
+
+    def get_parameters(self):
+        result = []
+        with open(os.path.join(tests_folder, f"test_{self.index}.kor"), 'r') as f:
+            for line in f.readlines():
+                result.append(line)
+        return result
 
     def run(self):
-        if not self.parameters:
+        if not self.expected:
             raise Exception
 
-        write_file(koral_file, self.parameters)
-        os.system(f"python {python_file}")
+        write_file(koral_file, self.get_parameters())
 
-        is_successfull = self.check_success()
+        is_successful = self.check_success()
 
         print(f"Test {self.index} ", end='')
-        if is_successfull:
+        if is_successful:
             print("passed ✓")
         else:
             print("failed ✗")
@@ -62,11 +66,7 @@ def main():
     save_file(koral_file)
     save_file(ast_file)
 
-    test_one = Test('5 + 5')
-    test_two = Test('5 + 5 * 5')
-    test_three = Test('5 * 5 + 5')
-    test_four = Test('5 + 5 * 5 - 2')
-    test_five = Test('10 - 6 * 2 / 6 + 1 - 4 / 3')
+    test_one = Test('10')
     
     run_tests()
 

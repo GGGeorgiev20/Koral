@@ -1,19 +1,11 @@
 import math
 import json
-import os
-
-koral_file = 'main.kor'
 
 class Error:
     def __init__(self, error_message, line):
         self.message = ''
-        with open(koral_file, 'r') as f:
-            lines = f.readlines()
-            self.message = f'   File "{os.path.abspath(koral_file)}", line {line}:'
-            self.message += f'\n\t{lines[line - 1]}'
-            if len(lines) == line:
-                self.message += '\n'
-            self.message += f'   Syntax error: {error_message}'
+        self.error_message = error_message
+        self.line = line
 
 class Parser:
     def __init__(self, tokens, ast_file):
@@ -88,13 +80,18 @@ class Parser:
                         template['expression'] = self.assign_value(token.value, line[index + 2:])
                     elif line[index + 1].value == '(':
                         name = token.value
+                        current = []
                         args = []
+                        
                         for arg in line[index + 2:]:
+                            if arg.value == ')' or arg.value == ',':
+                                args.append(self.binary_expression(current))
+                                current = []
                             if arg.value == ')':
                                 break
                             if arg.value == ',':
                                 continue
-                            args.append(self.binary_expression([arg]))
+                            current.append(arg)
                         template['expression'] = self.call_function(name, *args)
                     self.ast['body'].append(template)
 

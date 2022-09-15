@@ -1,15 +1,11 @@
 [
     {
         "type": "Keyword",
-        "value": "var"
+        "value": "say"
     },
     {
-        "type": "Identifier",
-        "value": "test"
-    },
-    {
-        "type": "Operator",
-        "value": "="
+        "type": "Punctuator",
+        "value": "("
     },
     {
         "type": "Numeric",
@@ -21,58 +17,10 @@
     },
     {
         "type": "Numeric",
-        "value": "3"
-    },
-    {
-        "type": "Keyword",
-        "value": "say"
-    },
-    {
-        "type": "Punctuator",
-        "value": "("
-    },
-    {
-        "type": "String",
-        "value": "\"test\""
+        "value": "5"
     },
     {
         "type": "Punctuator",
         "value": ")"
-    },
-    {
-        "type": "Identifier",
-        "value": "main"
-    },
-    {
-        "type": "Punctuator",
-        "value": "("
-    },
-    {
-        "type": "String",
-        "value": "\"args\""
-    },
-    {
-        "type": "Punctuator",
-        "value": ","
-    },
-    {
-        "type": "String",
-        "value": "\"args2\""
-    },
-    {
-        "type": "Punctuator",
-        "value": ")"
-    },
-    {
-        "type": "Identifier",
-        "value": "test"
-    },
-    {
-        "type": "Operator",
-        "value": "="
-    },
-    {
-        "type": "String",
-        "value": "\"kuche\""
     }
 ]

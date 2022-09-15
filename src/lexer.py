@@ -1,6 +1,6 @@
 import json
 
-PUNCTUATION = [ '+', '-', '*', '/', '=', ',', '(', ')' ]
+PUNCTUATION = [ '+', '-', '*', '/', '%', '=', ',', '(', ')' ]
 KEYWORDS = ['var', 'say', 'if', 'else']
 
 class Token:
@@ -55,6 +55,7 @@ class Lexer:
             '-': 'Operator',
             '*': 'Operator',
             '/': 'Operator',
+            '%': 'Operator',
             '=': 'Operator',
             ',': 'Punctuator',
             '(': 'Punctuator',

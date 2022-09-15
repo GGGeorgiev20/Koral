@@ -2,33 +2,6 @@
     "type": "Program",
     "body": [
         {
-            "type": "VariableDeclaration",
-            "declarations": [
-                {
-                    "type": "VariableDeclarator",
-                    "id": {
-                        "type": "Identifier",
-                        "name": "test"
-                    },
-                    "init": {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Literal",
-                            "value": 5,
-                            "raw": "5"
-                        },
-                        "right": {
-                            "type": "Literal",
-                            "value": 3,
-                            "raw": "3"
-                        }
-                    }
-                }
-            ],
-            "kind": "var"
-        },
-        {
             "type": "ExpressionStatement",
             "expression": {
                 "type": "CallExpression",
@@ -38,49 +11,20 @@
                 },
                 "arguments": [
                     {
-                        "type": "Literal",
-                        "value": "test",
-                        "raw": "\"test\""
+                        "type": "BinaryExpression",
+                        "operator": "+",
+                        "left": {
+                            "type": "Literal",
+                            "value": 5,
+                            "raw": "5"
+                        },
+                        "right": {
+                            "type": "Literal",
+                            "value": 5,
+                            "raw": "5"
+                        }
                     }
                 ]
-            }
-        },
-        {
-            "type": "ExpressionStatement",
-            "expression": {
-                "type": "CallExpression",
-                "callee": {
-                    "type": "Identifier",
-                    "name": "main"
-                },
-                "arguments": [
-                    {
-                        "type": "Literal",
-                        "value": "args",
-                        "raw": "\"args\""
-                    },
-                    {
-                        "type": "Literal",
-                        "value": "args2",
-                        "raw": "\"args2\""
-                    }
-                ]
-            }
-        },
-        {
-            "type": "ExpressionStatement",
-            "expression": {
-                "type": "AssignmentExpression",
-                "operator": "=",
-                "left": {
-                    "type": "Identifier",
-                    "name": "test"
-                },
-                "right": {
-                    "type": "Literal",
-                    "value": "kuche",
-                    "raw": "\"kuche\""
-                }
             }
         }
     ],
