@@ -24,7 +24,7 @@ class Interpreter:
     def get_variable_type(self, value):
         try:
             float(value)
-        except:
+        except ValueError:
             return 'String'
         return 'Numeric'
 
@@ -50,7 +50,10 @@ class Interpreter:
             elif left['type'] == 'Identifier':
                 variable = self.get_variable(left['name'])
                 if variable:
-                    left = float(variable.value)
+                    if self.get_variable_type(variable.value) == 'Numeric':
+                        left = float(variable.value)
+                    else:
+                        left = variable.value
                 else:
                     self.errors.append(Error(f'Variable "{left["name"]}" not found'))
                     return
@@ -62,26 +65,37 @@ class Interpreter:
             elif right['type'] == 'Identifier':
                 variable = self.get_variable(right['name'])
                 if variable:
-                    right = float(variable.value)
+                    if self.get_variable_type(variable.value) == 'Numeric':
+                        right = float(variable.value)
+                    else:
+                        right = variable.value
                 else:
                     self.errors.append(Error(f'Variable "{right["name"]}" not found'))
                     return
             else:
                 right = self.solve_expression(right)
 
-            if operator == '+':
-                result = left + right
-            elif operator == '-':
-                result = left - right
-            elif operator == '*':
-                result = left * right
-            elif operator == '/':
-                result = left / right
-            elif operator == '%':
-                result = left % right
+            if self.get_variable_type(left) == 'Numeric' and self.get_variable_type(right) == 'Numeric':
+                if operator == '+':
+                    result = left + right
+                elif operator == '-':
+                    result = left - right
+                elif operator == '*':
+                    result = left * right
+                elif operator == '/':
+                    result = left / right
+                elif operator == '%':
+                    result = left % right
+                
+                if result * 10 % 10 == 0:
+                    return int(result)
+            elif self.get_variable_type(left) == 'String' and self.get_variable_type(right) == 'String':
+                if operator == '+':
+                    result = left + right
+                else:
+                    self.errors.append(Error(f'Operator "{operator}" not supported for strings', expression['line']))
+                    return
 
-            if result * 10 % 10 == 0:
-                return int(result)
             return result
 
     def execute(self):
@@ -97,7 +111,7 @@ class Interpreter:
                             value = variable_value.value
                             type = variable_value.type
                         else:
-                            self.errors.append(Error(f'Variable "{variable["init"]["name"]}" not found'))
+                            self.errors.append(Error(f'Variable "{variable["init"]["name"]}" not found', node['line']))
                             return
                     else:
                         value = self.solve_expression(variable['init'])
@@ -114,12 +128,12 @@ class Interpreter:
                             if variable_value:
                                 variable.assign(variable_value.value)
                             else:
-                                self.errors.append(Error(f'Variable "{node["expression"]["right"]["name"]}" not found'))
+                                self.errors.append(Error(f'Variable "{node["expression"]["right"]["name"]}" not found', node['line']))
                                 return
                         else:
                             variable.assign(self.solve_expression(node['expression']['right']))
                     else:
-                        self.errors.append(Error(f'Variable "{node["expression"]["left"]["name"]}" not found'))
+                        self.errors.append(Error(f'Variable "{node["expression"]["left"]["name"]}" not found', node['line']))
                         return
                 elif node['expression']['type'] == 'CallExpression':
                     name = node['expression']['callee']['name']
@@ -134,7 +148,7 @@ class Interpreter:
                             if identifier:
                                 arguments.append(identifier.value)
                             else:
-                                self.errors.append(Error(f'Variable "{arg["name"]}" not found'))
+                                self.errors.append(Error(f'Variable "{arg["name"]}" not found', node['line']))
                                 return
                         else:
                             arguments.append(self.solve_expression(arg))
@@ -149,5 +163,15 @@ class Interpreter:
             arg_end = ' '
             if index == len(args) - 1:
                 arg_end = ''
-            print(arg, end=arg_end)
+            new_lines = []
+            arg = str(arg)
+            for i in range(len(arg)):
+                if arg[i:i+2] == '\\n':
+                    new_lines.append(i)
+                    arg = arg[:i] + arg[i+2:]
+            for i in range(len(arg)):
+                if i in new_lines:
+                    print()
+                print(arg[i], end='')
+            print(end=arg_end)
         print()

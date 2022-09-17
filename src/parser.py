@@ -16,7 +16,8 @@ class Parser:
 
     def parse(self):
         self.check_syntax(self.tokens)
-        self.generate_ast(self.ast_file, self.tokens)
+        if len(self.errors) == 0:
+            self.generate_ast(self.ast_file, self.tokens)
 
     def check_syntax(self, tokens):
         lines = self.get_lines(tokens)
@@ -24,8 +25,8 @@ class Parser:
         for line in lines:
             short = self.get_short(line)
             for index, token in enumerate(line):
-                if index < len(line) - 1 and short[index] == short[index + 1]:
-                    type = token.type.lower()
+                if index < len(line) - 1 and (short[index] == short[index + 1] or (short[index] == 'S' and short[index + 1] == 'N')):
+                    type = tokens[index + 1].type.lower()
                     self.errors.append(Error(f"Unexpected {type}", token.line))
                     return
                 if (token.type == 'Identifier' or token.value == "say") and index == 0:
@@ -36,7 +37,7 @@ class Parser:
                         self.errors.append(Error("Missing opening or closing paranthesis", token.line))
                         return
                 if token.type == 'String':
-                    if token.value[0] != token.value[-1]:
+                    if token.value.count('"') % 2 != 0:
                         self.errors.append(Error("Missing opening or closing quote", token.line))
                         return
 
@@ -63,6 +64,7 @@ class Parser:
         for line in lines:
             short = self.get_short(line)
             for index, token in enumerate(line):
+                generated_node = False
                 if token.value == "var":
                     var_value = short[index + 3:]
                     if 'S' in var_value and 'N' in var_value:
@@ -71,6 +73,7 @@ class Parser:
                     name = line[index + 1].value
                     value = self.binary_expression(line[index + 3:])
                     self.ast['body'].append(self.declare_variable(name, value))
+                    generated_node = True
                 if token.type == 'Identifier' and index == 0:
                     template = {
                         "type": "ExpressionStatement",
@@ -94,6 +97,9 @@ class Parser:
                             current.append(arg)
                         template['expression'] = self.call_function(name, *args)
                     self.ast['body'].append(template)
+                    generated_node = True
+                if generated_node:
+                    self.ast['body'][len(self.ast['body']) - 1]["line"] = token.line
 
         self.ast["sourceType"] = "script"
         with open(ast_file, 'w') as f:
@@ -111,8 +117,7 @@ class Parser:
                     },
                     "init": {}
                 }
-            ],
-            "kind": "var"
+            ]
         }
 
         variable['declarations'][0]['init'] = value

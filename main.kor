@@ -1,5 +1,1 @@
-var example = "Hello World!"
-var number = 5 * 5 * 4
-
-say(example)
-say(number)
+var example = "test"

@@ -15,7 +15,7 @@ class Lexer:
         self.token_file = token_file
         self.lexemes = []
         self.tokens = []
-        self.line = 1
+        self.lines = []
 
     def execute(self):
         self.scan(self.koral_file)
@@ -24,27 +24,43 @@ class Lexer:
 
     def scan(self, file):
         with open(file, 'r') as f:
-            for line in f.readlines():
-                indexes = {}
+            in_string = False
+            lexeme_count = len(self.lexemes)
+            for index, line in enumerate(f.readlines()):
+                current = ''
+                for i in range(len(line)):
+                    if line[i] == '"':
+                        current += line[i]
+                        if in_string:
+                            self.lexemes.append(current)
+                            current = ''
+                        in_string = not in_string
+                    elif line[i] in PUNCTUATION and not in_string:
+                        if current != '':
+                            self.lexemes.append(current)
+                        self.lexemes.append(line[i])
+                        current = ''
+                    elif line[i] != ' ' or in_string:
+                        current += line[i]
+                    if current in KEYWORDS:
+                        self.lexemes.append(current)
+                        current = ''
+                    if i == len(line) - 1 and (in_string or current != ''):
+                        self.lexemes.append(current)
+                    if line[i] == ' ' and not in_string:
+                        if current != '':
+                            self.lexemes.append(current)
+                        current = ''
+                    for i in range(len(self.lexemes) - lexeme_count):
+                        self.lines.append(index + 1)
+                    lexeme_count = len(self.lexemes)
 
-                line = line.replace(' ', '')
-                for lex in PUNCTUATION:
-                    while lex in line:
-                        indexes[line.find(lex)] = lex
-                        line = line.replace(lex, '¿', 1)
-                    
-                for keyword in KEYWORDS:
-                    while keyword in line:
-                        indexes[line.find(keyword)] = keyword
-                        line = line.replace(keyword, '¿', 1)
-
-                while '¿' in line:
-                    for index in sorted(indexes):
-                        line = line.replace('¿', f' {indexes[index]} ', 1)
-
-                for lexeme in line.split():
-                    self.lexemes.append(lexeme)
-                self.lexemes.append('\n')
+    def process_unary(self, tokens):
+        for index, token in enumerate(tokens):
+            if tokens[index-1].type == 'Operator' and token.type == 'Operator' and tokens[index+1].type == 'Numeric':
+                token.value += tokens[index+1].value
+                token.type = 'Numeric'
+                tokens.pop(index+1)
 
     def determine_type(self, lexeme):
         if lexeme in KEYWORDS:
@@ -74,13 +90,13 @@ class Lexer:
         return type
 
     def evaluate(self, lexemes, tokens):
-        for lexeme in lexemes:
+        for index, lexeme in enumerate(lexemes):
             if lexeme == '\n':
-                self.line += 1
                 continue
             
             type = self.determine_type(lexeme)
-            tokens.append(Token(type, lexeme, self.line))
+            tokens.append(Token(type, lexeme, self.lines[index]))
+        self.process_unary(tokens)
 
     def generate_token_base(self, tokens, token_base):
         token_list = []
