@@ -10,7 +10,7 @@ CallExpression::CallExpression(const std::vector<std::any>& attributes)
 
 void CallExpression::Execute()
 {
-    std::cout << "CallExpression::Execute()" << std::endl;
+    // printf("Calling function '%s' with %lld arguments\n", identifier.c_str(), arguments.size());
 }
 
 std::vector<std::any> CallExpression::GetAttributes()

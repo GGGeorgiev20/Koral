@@ -4,6 +4,8 @@
 #include "./Nodes/NodeManager.hpp"
 #include "./Util/ErrorManager.hpp"
 
+#include <unordered_map>
+
 class Parser
 {
 public:
@@ -33,16 +35,14 @@ private:
     std::vector<std::shared_ptr<Token>> tokens;
     std::vector<std::shared_ptr<Node>> AST;
 
-    const std::vector<std::string> indexes = { "Keyword", "Identifier", "Type", "Punctuation", "Operator", "Numeric", "String" };
-
-    const std::vector<std::vector<std::string>> expectedAfter = {
-        { "Null" },
-        { "Operator", "Punctuation" },
-        { "Identifier" },
-        { "Numeric", "String" },
-        { "Identifier", "Numeric", "String" },
-        { "Operator", "Punctuation" },
-        { "Operator", "Punctuation" }
+    const std::unordered_map<std::string, std::vector<std::string>> expectedAfter = {
+        { "Keyword", { "Null" } },
+        { "Identifier", { "Operator", "Punctuation" } },
+        { "Type", { "Identifier" } },
+        { "Punctuation", { "Identifier", "Numeric", "String", "Punctuation" } },
+        { "Operator", { "Identifier", "Numeric", "String" } },
+        { "Numeric", { "Operator", "Punctuation" } },
+        { "String", { "Operator", "Punctuation" } }
     };
 
     const std::vector<std::string> illegalRepeats = { "Keyword", "Identifier", "Numeric", "String", "Operator" };

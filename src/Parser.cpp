@@ -83,6 +83,7 @@ void Parser::GenerateAST()
             auto token = line[i];
             std::vector<std::any> attributes;
 
+            // Variable declaration
             if (token->GetType() == "Type")
             {
                 std::string type = token->GetValue();
@@ -102,6 +103,67 @@ void Parser::GenerateAST()
                 auto node = AddNode<VariableDeclaration>(attributes);
 
                 AST.push_back(node);
+            }
+
+            // Call expression
+            if (token->GetType() == "Identifier")
+            {
+                std::string identifier = token->GetValue();
+
+                if (GetValueByIndex(line, i + 1) == "(")
+                {
+                    std::vector<std::shared_ptr<Node>> arguments;
+                    std::vector<std::shared_ptr<Token>> currentArgument;
+
+                    std::string value;
+                    
+                    i += 2;
+                    while (true)
+                    {
+                        value = GetValueByIndex(line, i);
+                        
+                        if (value == "Null")
+                            SYNTAX_ERROR("Expected end at call expression", token->GetLine());
+                        
+                        if (value == ")")
+                        {
+                            if (currentArgument.size() != 0)
+                            {
+                                auto expression = GetBinaryExpression(currentArgument);
+
+                                arguments.push_back(expression);
+
+                                currentArgument.clear();
+                            }
+
+                            break;
+                        }
+
+                        if (value == ",")
+                        {
+                            if (currentArgument.size() == 0)
+                                SYNTAX_ERROR("Expected value at call expression", token->GetLine());
+
+                            auto expression = GetBinaryExpression(currentArgument);
+
+                            arguments.push_back(expression);
+
+                            currentArgument.clear();
+                        }
+                        else
+                        {
+                            currentArgument.push_back(line[i]);
+                        }
+
+                        i++;
+                    }
+
+                    attributes = { identifier, arguments };
+
+                    auto node = AddNode<CallExpression>(attributes);
+
+                    AST.push_back(node);
+                }
             }
         }
     }
@@ -127,7 +189,7 @@ std::vector<std::vector<std::shared_ptr<Token>>> Parser::GetTokensLines()
             lines.push_back(line);
             line.clear();
 
-            currentLine++;
+            currentLine = token->GetLine();
         }
 
         line.push_back(token);
@@ -174,11 +236,24 @@ void Parser::CheckIfExpected(std::vector<std::shared_ptr<Token>>& tokens)
     std::string type = tokens[0]->GetType();
     std::string nextType = tokens[1]->GetType();
 
-    size_t index = std::find(indexes.begin(), indexes.end(), type) - indexes.begin();
+    const auto key = expectedAfter.find(type);
 
-    if (index < expectedAfter.size())
+    if (key != expectedAfter.end())
     {
-        if (std::find(expectedAfter[index].begin(), expectedAfter[index].end(), nextType) == expectedAfter[index].end())
+        const auto& expected = key->second;
+
+        bool found = false;
+
+        for (auto& expectedType : expected)
+        {
+            if (nextType == expectedType)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
         {
             std::transform(type.begin(), type.end(), type.begin(), ::tolower);
             std::transform(nextType.begin(), nextType.end(), nextType.begin(), ::tolower);
