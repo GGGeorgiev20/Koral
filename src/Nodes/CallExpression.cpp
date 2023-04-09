@@ -2,7 +2,7 @@
 
 CallExpression::CallExpression(const std::vector<std::any>& attributes)
 {
-    assert(attributes.size() == 2);
+    assert(attributes.size() == attributesCount);
 
     this->identifier = std::any_cast<std::string>(attributes[0]);
     this->arguments = std::any_cast<std::vector<std::shared_ptr<Node>>>(attributes[1]);
@@ -10,7 +10,7 @@ CallExpression::CallExpression(const std::vector<std::any>& attributes)
 
 void CallExpression::Execute()
 {
-    // printf("Calling function '%s' with %lld arguments\n", identifier.c_str(), arguments.size());
+    printf("Calling function '%s' with %lld arguments\n", identifier.c_str(), arguments.size());
 }
 
 std::vector<std::any> CallExpression::GetAttributes()

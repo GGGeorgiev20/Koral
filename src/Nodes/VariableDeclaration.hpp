@@ -15,16 +15,11 @@ public:
 
     void Execute() override;
 
-    void ExecuteNull();
-
-    void ExecuteLiteral();
-
-    void ExecuteBinaryExpression();
-
     std::vector<std::any> GetAttributes() override;
 
 private:
     std::string type;
     std::string identifier;
-    std::shared_ptr<Node> expression;
+
+    size_t attributesCount = 2;
 };

@@ -15,4 +15,6 @@ public:
 
 private:
     std::any value;
+
+    size_t attributesCount = 1;
 };

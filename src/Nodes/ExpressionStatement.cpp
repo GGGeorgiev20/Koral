@@ -2,7 +2,7 @@
 
 ExpressionStatement::ExpressionStatement(const std::vector<std::any>& attributes)
 {
-    assert(attributes.size() == 2);
+    assert(attributes.size() == attributesCount);
 
     this->identifier = std::any_cast<std::string>(attributes[0]);
     this->expression = std::any_cast<std::shared_ptr<Node>>(attributes[1]);
@@ -10,7 +10,7 @@ ExpressionStatement::ExpressionStatement(const std::vector<std::any>& attributes
 
 void ExpressionStatement::Execute()
 {
-    std::cout << "ExpressionStatement::Execute()" << std::endl;
+    printf("Updating value of variable '%s'\n", identifier.c_str());
 }
 
 std::vector<std::any> ExpressionStatement::GetAttributes()

@@ -16,4 +16,6 @@ public:
 private:
     std::string identifier;
     std::shared_ptr<Node> expression;
+
+    size_t attributesCount = 2;
 };

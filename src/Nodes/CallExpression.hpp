@@ -16,4 +16,6 @@ public:
 private:
     std::string identifier;
     std::vector<std::shared_ptr<Node>> arguments;
+
+    size_t attributesCount = 2;
 };

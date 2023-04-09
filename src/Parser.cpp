@@ -89,20 +89,13 @@ void Parser::GenerateAST()
                 std::string type = token->GetValue();
                 std::string identifier = line[i + 1]->GetValue();
 
-                if (GetValueByIndex(line, i + 3) == "Null")
-                    attributes = { type, identifier, nullptr };
-                else
-                {
-                    auto tokens = std::vector<std::shared_ptr<Token>>(line.begin() + i + 3, line.end());
-
-                    auto expression = GetBinaryExpression(tokens);
-
-                    attributes = { type, identifier, expression };
-                }
+                attributes = { type, identifier };
 
                 auto node = AddNode<VariableDeclaration>(attributes);
 
                 AST.push_back(node);
+
+                continue;
             }
 
             // Call expression
@@ -116,7 +109,7 @@ void Parser::GenerateAST()
                     std::vector<std::shared_ptr<Token>> currentArgument;
 
                     std::string value;
-                    
+
                     i += 2;
                     while (true)
                     {
@@ -163,6 +156,29 @@ void Parser::GenerateAST()
                     auto node = AddNode<CallExpression>(attributes);
 
                     AST.push_back(node);
+
+                    continue;
+                }
+            }
+
+            // Expression statement
+            if (token->GetType() == "Identifier")
+            {
+                std::string identifier = token->GetValue();
+
+                if (GetValueByIndex(line, i + 1) == "=")
+                {
+                    auto tokens = std::vector<std::shared_ptr<Token>>(line.begin() + i + 2, line.end());
+
+                    auto expression = GetBinaryExpression(tokens);
+
+                    attributes = { identifier, expression };
+
+                    auto node = AddNode<ExpressionStatement>(attributes);
+
+                    AST.push_back(node);
+
+                    continue;
                 }
             }
         }

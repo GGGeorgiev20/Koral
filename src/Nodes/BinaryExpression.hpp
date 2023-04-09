@@ -27,4 +27,6 @@ private:
     Operator op;
 
     std::shared_ptr<Node> next;
+
+    size_t attributesCount = 4;
 };

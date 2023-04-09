@@ -2,7 +2,7 @@
 
 Literal::Literal(const std::vector<std::any>& attributes)
 {
-    assert(attributes.size() == 1);
+    assert(attributes.size() == attributesCount);
 
     value = attributes[0];
 }

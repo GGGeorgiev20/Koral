@@ -2,7 +2,7 @@
 
 BinaryExpression::BinaryExpression(const std::vector<std::any>& attributes)
 {
-    assert(attributes.size() == 4);
+    assert(attributes.size() == attributesCount);
 
     this->left = std::any_cast<std::shared_ptr<Node>>(attributes[0]);
     this->right = std::any_cast<std::shared_ptr<Node>>(attributes[1]);
