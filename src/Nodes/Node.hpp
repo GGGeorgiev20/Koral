@@ -5,7 +5,6 @@
 #include <string>
 #include <cassert>
 #include <memory>
-#include <typeinfo>
 #include <any>
 
 class Node
@@ -20,4 +19,7 @@ public:
     virtual std::string GetType() = 0;
 };
 
-#define DEFINE_NODE(name) std::string GetType() override { return #name; }
+#define DEFINE_NODE(name, attributes) \
+    name() = default; \
+    std::string GetType() override { return #name; } \
+    const size_t attributesCount = attributes;

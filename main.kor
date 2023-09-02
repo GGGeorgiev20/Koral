@@ -1,1 +1,1 @@
-int mySum = sum(2, 3)
+int main = sum(2, 3)

@@ -2,9 +2,10 @@
 
 #include "BinaryExpression.hpp"
 #include "CallExpression.hpp"
-#include "ExpressionStatement.hpp"
+#include "AssignmentExpression.hpp"
 #include "Literal.hpp"
 #include "VariableDeclaration.hpp"
+#include "VariableReference.hpp"
 
 namespace NodeManager
 {

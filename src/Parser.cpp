@@ -26,35 +26,15 @@ void Parser::AnalyzeSyntax()
             {
                 auto nextTwo = std::vector<std::shared_ptr<Token>>(line.begin() + i, line.begin() + i + 2);
 
-                CheckIfExpected(nextTwo);
+                SyntaxManager::CheckIfExpected(nextTwo);
 
-                CheckIllegalRepeat(nextTwo);
+                SyntaxManager::CheckIllegalRepeat(nextTwo);
 
                 if (i + 2 < line.size())
                 {
                     auto nextThree = std::vector<std::shared_ptr<Token>>(line.begin() + i, line.begin() + i + 3);
 
-                    CheckIllegalRepeat(nextThree);
-                }
-            }
-
-            if (token->GetType() == "Type" || token->GetType() == "Array") // TO DO: Arrays
-            {
-                if (GetTypeByIndex(line, i + 1) != "Identifier")
-                {
-                    SYNTAX_ERROR("Expected identifier at variable declaration", token->GetLine());
-                }
-                else
-                {
-                    if (GetValueByIndex(line, i + 2) != "=" && GetValueByIndex(line, i + 2) != "Null")
-                    {
-                        SYNTAX_ERROR("Expected assignment operator at variable declaration", token->GetLine());
-                    }
-                    else if (GetValueByIndex(line, i + 2) == "=")
-                    {
-                        if (GetValueByIndex(line, i + 3) == "Null")
-                            SYNTAX_ERROR("Expected value at variable declaration", token->GetLine());
-                    }
+                    SyntaxManager::CheckIllegalRepeat(nextThree);
                 }
             }
 
@@ -76,6 +56,9 @@ void Parser::GenerateAST()
 {
     auto tokensLines = GetTokensLines();
 
+    // This variable receives a value when an assignment expression is found and an expression is expected
+    std::shared_ptr<Node> expectingExpression = nullptr;
+
     for (auto line : tokensLines)
     {
         for (size_t i = 0; i < line.size(); i++)
@@ -87,7 +70,14 @@ void Parser::GenerateAST()
             if (token->GetType() == "Type")
             {
                 std::string type = token->GetValue();
-                std::string identifier = line[i + 1]->GetValue();
+
+                std::string identifier = TokenManager::GetValueByIndex(line, i + 1);
+
+                if (identifier == "Null")
+                    SYNTAX_ERROR("Expected identifier at variable declaration", token->GetLine());
+                
+                if (!SyntaxManager::IsVariableNameValid(identifier))
+                    SYNTAX_ERROR("Invalid identifier at variable declaration", token->GetLine());
 
                 attributes = { type, identifier };
 
@@ -103,7 +93,7 @@ void Parser::GenerateAST()
             {
                 std::string identifier = token->GetValue();
 
-                if (GetValueByIndex(line, i + 1) == "(")
+                if (TokenManager::GetValueByIndex(line, i + 1) == "(")
                 {
                     std::vector<std::shared_ptr<Node>> arguments;
                     std::vector<std::shared_ptr<Token>> currentArgument;
@@ -113,7 +103,7 @@ void Parser::GenerateAST()
                     i += 2;
                     while (true)
                     {
-                        value = GetValueByIndex(line, i);
+                        value = TokenManager::GetValueByIndex(line, i);
                         
                         if (value == "Null")
                             SYNTAX_ERROR("Expected end at call expression", token->GetLine());
@@ -155,40 +145,43 @@ void Parser::GenerateAST()
 
                     auto node = AddNode<CallExpression>(attributes);
 
+                    // Check if an expression is expected
+                    if (expectingExpression != nullptr)
+                    {
+                        attributes = { expectingExpression, node };
+
+                        node = AddNode<AssignmentExpression>(attributes);
+
+                        AST.push_back(node);
+
+                        expectingExpression = nullptr;
+
+                        continue;
+                    }
+
                     AST.push_back(node);
 
                     continue;
                 }
             }
 
-            // Expression statement
+            // Assignment expression
             if (token->GetType() == "Identifier")
             {
                 std::string identifier = token->GetValue();
 
-                if (GetValueByIndex(line, i + 1) == "=")
+                if (TokenManager::GetValueByIndex(line, i + 1) == "=")
                 {
-                    auto tokens = std::vector<std::shared_ptr<Token>>(line.begin() + i + 2, line.end());
+                    // Gives value to the variable so the code knows that an expression is expected
+                    expectingExpression = AddNode<VariableReference>({ identifier });
 
-                    auto expression = GetBinaryExpression(tokens);
-
-                    attributes = { identifier, expression };
-
-                    auto node = AddNode<ExpressionStatement>(attributes);
-
-                    AST.push_back(node);
+                    i++;
 
                     continue;
                 }
             }
         }
     }
-}
-
-template <typename N>
-std::shared_ptr<Node> Parser::AddNode(const std::vector<std::any>& attributes)
-{
-    return NodeManager::CreateNode<N>(attributes);
 }
 
 std::vector<std::vector<std::shared_ptr<Token>>> Parser::GetTokensLines()
@@ -221,79 +214,20 @@ std::shared_ptr<Node> Parser::GetBinaryExpression(std::vector<std::shared_ptr<To
     std::shared_ptr<Node> node;
 
     if (tokens.size() == 1)
-        node = AddNode<Literal>({ tokens[0]->GetValue() });
+    {
+        if (tokens[0]->GetType() == "Identifier")
+            node = AddNode<VariableReference>({ tokens[0]->GetValue() });
+        else
+            node = AddNode<Literal>({ tokens[0]->GetValue(), tokens[0]->GetType() });
+    }
+    else
+        node = AddNode<BinaryExpression>({ tokens[1]->GetValue(), tokens[0]->GetValue(), tokens[2]->GetValue() });
     
     return node;
 }
 
-void Parser::CheckIllegalRepeat(std::vector<std::shared_ptr<Token>>& tokens)
+template <typename N>
+std::shared_ptr<Node> Parser::AddNode(const std::vector<std::any>& attributes)
 {
-    std::string type = tokens[0]->GetType();
-
-    if (std::find(illegalRepeats.begin(), illegalRepeats.end(), type) == illegalRepeats.end() && tokens.size() == 2)
-        return;
-
-    for (auto token : tokens)
-    {
-        if (token->GetType() != type)
-            return;
-    }
-
-    std::transform(type.begin(), type.end(), type.begin(), ::tolower);
-
-    std::string message = "Unexpected " + type;
-    size_t line = tokens[0]->GetLine();
-
-    SYNTAX_ERROR(message, line);
-}
-
-void Parser::CheckIfExpected(std::vector<std::shared_ptr<Token>>& tokens)
-{
-    std::string type = tokens[0]->GetType();
-    std::string nextType = tokens[1]->GetType();
-
-    const auto key = expectedAfter.find(type);
-
-    if (key != expectedAfter.end())
-    {
-        const auto& expected = key->second;
-
-        bool found = false;
-
-        for (auto& expectedType : expected)
-        {
-            if (nextType == expectedType)
-            {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found)
-        {
-            std::transform(type.begin(), type.end(), type.begin(), ::tolower);
-            std::transform(nextType.begin(), nextType.end(), nextType.begin(), ::tolower);
-
-            std::string message = "Unexpected " + nextType + " after " + type;
-            size_t line = tokens[0]->GetLine();
-
-            SYNTAX_ERROR(message, line);
-        }
-    }
-}
-
-std::string Parser::GetTypeByIndex(const std::vector<std::shared_ptr<Token>>& tokens, const size_t& index)
-{
-    if (index < tokens.size())
-        return tokens[index]->GetType();
-    else
-        return "Null";
-}
-
-std::string Parser::GetValueByIndex(const std::vector<std::shared_ptr<Token>>& tokens, const size_t& index)
-{
-    if (index < tokens.size())
-        return tokens[index]->GetValue();
-    else
-        return "Null";
+    return NodeManager::CreateNode<N>(attributes);
 }

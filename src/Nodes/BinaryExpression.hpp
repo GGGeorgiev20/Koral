@@ -1,32 +1,33 @@
 #pragma once
 
 #include "Node.hpp"
+#include "Literal.hpp"
 
 enum class Operator
 {
-    ADDITION,
-    SUBTRACTION,
-    MULTIPLICATION,
-    DIVISION
+    Add,
+    Subtract,
+    Multiply,
+    Divide
 };
 
 class BinaryExpression : public Node
 {
 public:
-    DEFINE_NODE(BinaryExpression)
+    DEFINE_NODE(BinaryExpression, 3)
 
     BinaryExpression(const std::vector<std::any>& attributes);
 
     void Execute() override;
 
+    Literal GetResult();
+
     std::vector<std::any> GetAttributes() override;
 
 private:
-    std::any left;
-    std::any right;
+    std::shared_ptr<Node> left;
+    std::shared_ptr<Node> right;
     Operator op;
 
-    std::shared_ptr<Node> next;
-
-    size_t attributesCount = 4;
+    Literal result;
 };

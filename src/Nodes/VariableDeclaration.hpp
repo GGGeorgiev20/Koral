@@ -9,7 +9,7 @@
 class VariableDeclaration : public Node
 {
 public:
-    DEFINE_NODE(VariableDeclaration)
+    DEFINE_NODE(VariableDeclaration, 2)
 
     VariableDeclaration(const std::vector<std::any>& attributes);
 
@@ -20,6 +20,4 @@ public:
 private:
     std::string type;
     std::string identifier;
-
-    size_t attributesCount = 2;
 };

@@ -6,7 +6,7 @@ void Interpreter::ExecuteNodes()
 
     for (auto& node : AST)
     {
-        // printf("Node: %s\n", node->GetType().c_str());
+        printf("Node: %s\n", node->GetType().c_str());
 
         node->Execute();
     }

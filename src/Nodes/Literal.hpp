@@ -5,7 +5,7 @@
 class Literal : public Node
 {
 public:
-    DEFINE_NODE(Literal)
+    DEFINE_NODE(Literal, 2)
 
     Literal(const std::vector<std::any>& attributes);
 
@@ -15,6 +15,5 @@ public:
 
 private:
     std::any value;
-
-    size_t attributesCount = 1;
+    std::string type;
 };
