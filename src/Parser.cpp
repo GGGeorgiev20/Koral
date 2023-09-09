@@ -56,15 +56,18 @@ void Parser::GenerateAST()
 {
     auto tokensLines = GetTokensLines();
 
-    // This variable receives a value when an assignment expression is found and an expression is expected
-    std::shared_ptr<Node> expectingExpression = nullptr;
-
     for (auto line : tokensLines)
     {
-        for (size_t i = 0; i < line.size(); i++)
+        for (size_t i = 0; i < line.size() - 1; i++)
         {
             auto token = line[i];
-            std::vector<std::any> attributes;
+
+            // Check for semicolon at the end of the line
+            if (TokenManager::GetValueByIndex(line, line.size() - 1) != ";")
+                SYNTAX_ERROR("Expected semicolon at end of line", token->GetLine());
+
+            if (token->GetValue() == ";")
+                SYNTAX_ERROR("Unexpected semicolon", token->GetLine());
 
             // Variable declaration
             if (token->GetType() == "Type")
@@ -73,15 +76,13 @@ void Parser::GenerateAST()
 
                 std::string identifier = TokenManager::GetValueByIndex(line, i + 1);
 
-                if (identifier == "Null")
+                if (identifier == ";" || identifier == "Null")
                     SYNTAX_ERROR("Expected identifier at variable declaration", token->GetLine());
                 
                 if (!SyntaxManager::IsVariableNameValid(identifier))
                     SYNTAX_ERROR("Invalid identifier at variable declaration", token->GetLine());
 
-                attributes = { type, identifier };
-
-                auto node = AddNode<VariableDeclaration>(attributes);
+                auto node = AddNode<VariableDeclaration>({ type, identifier });
 
                 AST.push_back(node);
 
@@ -105,14 +106,14 @@ void Parser::GenerateAST()
                     {
                         value = TokenManager::GetValueByIndex(line, i);
                         
-                        if (value == "Null")
+                        if (value == ";" || value == "Null")
                             SYNTAX_ERROR("Expected end at call expression", token->GetLine());
                         
                         if (value == ")")
                         {
                             if (currentArgument.size() != 0)
                             {
-                                auto expression = GetBinaryExpression(currentArgument);
+                                auto expression = ExpressionManager::GetBinaryExpression(currentArgument);
 
                                 arguments.push_back(expression);
 
@@ -127,7 +128,10 @@ void Parser::GenerateAST()
                             if (currentArgument.size() == 0)
                                 SYNTAX_ERROR("Expected value at call expression", token->GetLine());
 
-                            auto expression = GetBinaryExpression(currentArgument);
+                            if (!SyntaxManager::IsExpressionValid(currentArgument))
+                                SYNTAX_ERROR("Expression is not valid", token->GetLine());
+
+                            auto expression = ExpressionManager::GetBinaryExpression(currentArgument);
 
                             arguments.push_back(expression);
 
@@ -141,23 +145,9 @@ void Parser::GenerateAST()
                         i++;
                     }
 
-                    attributes = { identifier, arguments };
+                    std::shared_ptr<Node> node;
 
-                    auto node = AddNode<CallExpression>(attributes);
-
-                    // Check if an expression is expected
-                    if (expectingExpression != nullptr)
-                    {
-                        attributes = { expectingExpression, node };
-
-                        node = AddNode<AssignmentExpression>(attributes);
-
-                        AST.push_back(node);
-
-                        expectingExpression = nullptr;
-
-                        continue;
-                    }
+                    node = AddNode<CallExpression>({ identifier, arguments });
 
                     AST.push_back(node);
 
@@ -172,13 +162,57 @@ void Parser::GenerateAST()
 
                 if (TokenManager::GetValueByIndex(line, i + 1) == "=")
                 {
-                    // Gives value to the variable so the code knows that an expression is expected
-                    expectingExpression = AddNode<VariableReference>({ identifier });
-
                     i++;
+
+                    std::shared_ptr<Node> variable = AddNode<VariableReference>({ identifier });
+                    std::shared_ptr<Node> node = AddNode<AssignmentExpression>({ variable });
+
+                    AST.push_back(node);
 
                     continue;
                 }
+            }
+
+            // Binary expression
+            if (token->GetType() == "Identifier" || token->GetType() == "Numeric" || token->GetType() == "String")
+            {
+                std::vector<std::shared_ptr<Token>> expression;
+
+                expression.push_back(token);
+
+                std::string value;
+
+                i++;
+                while (true)
+                {
+                    value = TokenManager::GetValueByIndex(line, i);
+
+                    if (value == "Null")
+                        SYNTAX_ERROR("Expected end of expression", token->GetLine());
+
+                    if (value == ";")
+                        break;
+
+                    expression.push_back(line[i]);
+
+                    i++;
+                }
+
+                if (!SyntaxManager::IsExpressionValid(expression))
+                    SYNTAX_ERROR("Expression is not valid", token->GetLine());
+
+                printf("Binary expression:");
+                for (auto& token : expression)
+                {
+                    printf(" %s", token->GetValue().c_str());
+                }
+                printf("\n");
+
+                auto node = ExpressionManager::GetBinaryExpression(expression);
+
+                AST.push_back(node);
+
+                continue;
             }
         }
     }
@@ -207,23 +241,6 @@ std::vector<std::vector<std::shared_ptr<Token>>> Parser::GetTokensLines()
     lines.push_back(line);
 
     return lines;
-}
-
-std::shared_ptr<Node> Parser::GetBinaryExpression(std::vector<std::shared_ptr<Token>>& tokens)
-{
-    std::shared_ptr<Node> node;
-
-    if (tokens.size() == 1)
-    {
-        if (tokens[0]->GetType() == "Identifier")
-            node = AddNode<VariableReference>({ tokens[0]->GetValue() });
-        else
-            node = AddNode<Literal>({ tokens[0]->GetValue(), tokens[0]->GetType() });
-    }
-    else
-        node = AddNode<BinaryExpression>({ tokens[1]->GetValue(), tokens[0]->GetValue(), tokens[2]->GetValue() });
-    
-    return node;
 }
 
 template <typename N>

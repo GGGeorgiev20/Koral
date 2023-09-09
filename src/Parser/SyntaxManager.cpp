@@ -8,8 +8,8 @@ namespace SyntaxManager
         { "Keyword", { "Null" } },
         { "Identifier", { "Operator", "Punctuation" } },
         { "Type", { "Identifier" } },
-        { "Punctuation", { "Identifier", "Numeric", "String", "Punctuation" } },
-        { "Operator", { "Identifier", "Numeric", "String" } },
+        { "Punctuation", { "Identifier", "Numeric", "String", "Operator", "Punctuation" } },
+        { "Operator", { "Identifier", "Numeric", "String", "Punctuation" } },
         { "Numeric", { "Operator", "Punctuation" } },
         { "String", { "Operator", "Punctuation" } }
     };
@@ -84,6 +84,36 @@ namespace SyntaxManager
                 return false;
         }
 
+        return true;
+    }
+
+    bool IsExpressionValid(std::vector<std::shared_ptr<Token>>& tokens)
+    {
+        int operandCount = 0;
+        int operatorCount = 0;
+        int leftParanthesisCount = 0;
+        int rightParanthesisCount = 0;
+
+        for (auto& token : tokens)
+        {
+            if (token->GetType() == "Operator")
+                operatorCount++;
+            else if (token->GetType() == "Numeric" || token->GetType() == "String" || token->GetType() == "Identifier")
+                operandCount++;
+            else if (token->GetValue() == "(")
+                leftParanthesisCount++;
+            else if (token->GetValue() == ")")
+                rightParanthesisCount++;
+            else
+                return false;
+        }
+
+        if (operandCount != operatorCount + 1)
+            return false;
+        
+        if (leftParanthesisCount != rightParanthesisCount)
+            return false;
+        
         return true;
     }
 };

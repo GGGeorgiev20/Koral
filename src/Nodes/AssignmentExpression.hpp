@@ -5,7 +5,7 @@
 class AssignmentExpression : public Node
 {
 public:
-    DEFINE_NODE(AssignmentExpression, 2)
+    DEFINE_NODE(AssignmentExpression, 1)
 
     AssignmentExpression(const std::vector<std::any>& attributes);
 
@@ -15,5 +15,4 @@ public:
 
 private:
     std::shared_ptr<Node> variable;
-    std::shared_ptr<Node> expression;
 };

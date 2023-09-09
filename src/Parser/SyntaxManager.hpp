@@ -15,6 +15,8 @@ namespace SyntaxManager
     void CheckIfExpected(std::vector<std::shared_ptr<Token>>& tokens);
 
     bool IsVariableNameValid(std::string name);
+
+    bool IsExpressionValid(std::vector<std::shared_ptr<Token>>& tokens);
 };
 
 #define SYNTAX_ERROR(MSG, LINE) ErrorManager::GetInstance()->SyntaxError(MSG, LINE);

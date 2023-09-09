@@ -5,7 +5,6 @@ AssignmentExpression::AssignmentExpression(const std::vector<std::any>& attribut
     assert(attributes.size() == attributesCount);
 
     this->variable = std::any_cast<std::shared_ptr<Node>>(attributes[0]);
-    this->expression = std::any_cast<std::shared_ptr<Node>>(attributes[1]);
 }
 
 void AssignmentExpression::Execute()
@@ -15,5 +14,5 @@ void AssignmentExpression::Execute()
 
 std::vector<std::any> AssignmentExpression::GetAttributes()
 {
-    return { variable, expression };
+    return { variable };
 }

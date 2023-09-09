@@ -32,7 +32,7 @@ private:
     std::string content;
     std::vector<std::shared_ptr<Token>> tokens;
     
-    const std::string operators = "+-*/%&|!^~<>=";
+    const std::string operators = "+-*/%=";
     const std::string punctuation = ".,:;(){}[]";
     
     const std::vector<std::string> keywords = { "if", "else", "for", "while", "do", "return", "break", "continue" };

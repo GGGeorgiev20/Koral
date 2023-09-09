@@ -1,12 +1,16 @@
 #pragma once
 
-#include "../Nodes/Node.hpp"
+#include "../Util/ErrorManager.hpp"
+#include "../Nodes/NodeManager.hpp"
 
-class ExpressionManager
+#include "../Token.hpp"
+
+#include <unordered_map>
+#include <algorithm>
+
+namespace ExpressionManager
 {
-public:
-    std::vector<std::shared_ptr<Node>> GetArguments();
+    std::shared_ptr<Node> GetBinaryExpression(std::vector<std::shared_ptr<Token>>& expression);
 
-private:
-    const std::vector<char> priority = { '(', ')', '*', '/', '+', '-' };
+    std::vector<std::shared_ptr<Token>> ConvertToPostfix(std::vector<std::shared_ptr<Token>>& expression);
 };

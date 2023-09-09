@@ -1,1 +1,1 @@
-int main = sum(2, 3)
+int main = a+b*(c*d-e)+(f+g*h)-i;
