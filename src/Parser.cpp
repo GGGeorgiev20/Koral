@@ -2,7 +2,7 @@
 
 std::vector<std::shared_ptr<Node>> Parser::Parse()
 {
-    AnalyzeSyntax();
+    // AnalyzeSyntax();
 
     GenerateAST();
 
@@ -113,7 +113,7 @@ void Parser::GenerateAST()
                         {
                             if (currentArgument.size() != 0)
                             {
-                                auto expression = ExpressionManager::GetBinaryExpression(currentArgument);
+                                auto expression = ExpressionConstructor::GetBinaryExpression(currentArgument);
 
                                 arguments.push_back(expression);
 
@@ -125,13 +125,15 @@ void Parser::GenerateAST()
 
                         if (value == ",")
                         {
+                            // Check if the current argument is a CallExpression
+
                             if (currentArgument.size() == 0)
                                 SYNTAX_ERROR("Expected value at call expression", token->GetLine());
 
                             if (!SyntaxManager::IsExpressionValid(currentArgument))
                                 SYNTAX_ERROR("Expression is not valid", token->GetLine());
 
-                            auto expression = ExpressionManager::GetBinaryExpression(currentArgument);
+                            auto expression = ExpressionConstructor::GetBinaryExpression(currentArgument);
 
                             arguments.push_back(expression);
 
@@ -174,7 +176,7 @@ void Parser::GenerateAST()
             }
 
             // Binary expression
-            if (token->GetType() == "Identifier" || token->GetType() == "Numeric" || token->GetType() == "String")
+            if (token->GetType() == "Identifier" || token->GetType() == "Number" || token->GetType() == "String")
             {
                 std::vector<std::shared_ptr<Token>> expression;
 
@@ -201,14 +203,7 @@ void Parser::GenerateAST()
                 if (!SyntaxManager::IsExpressionValid(expression))
                     SYNTAX_ERROR("Expression is not valid", token->GetLine());
 
-                printf("Binary expression:");
-                for (auto& token : expression)
-                {
-                    printf(" %s", token->GetValue().c_str());
-                }
-                printf("\n");
-
-                auto node = ExpressionManager::GetBinaryExpression(expression);
+                auto node = ExpressionConstructor::GetBinaryExpression(expression);
 
                 AST.push_back(node);
 

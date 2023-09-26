@@ -1,1 +1,1 @@
-int main = a+b*(c*d-e)+(f+g*h)-i;
+int main = say(sum(2), 5);

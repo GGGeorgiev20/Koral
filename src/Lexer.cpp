@@ -89,8 +89,8 @@ void Lexer::PostProcess()
 
         std::vector<std::shared_ptr<Token>> tokensToCheck = { previousToken, token, nextToken };
 
-        std::vector<std::string> unary = { "Operator", "Operator", "Numeric" };
-        std::vector<std::string> floating = { "Numeric", "Punctuation", "Numeric" };
+        std::vector<std::string> unary = { "Operator", "Operator", "Number" };
+        std::vector<std::string> floating = { "Number", "Punctuation", "Number" };
 
         if (AreForwarded(tokensToCheck, unary))
         {
@@ -136,7 +136,7 @@ std::string Lexer::DetermineType(std::string lexeme)
     
     try {
         std::stoi(lexeme);
-        return "Numeric";
+        return "Number";
     }
     catch (std::invalid_argument const&)
     {

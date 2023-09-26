@@ -2,15 +2,15 @@
 
 namespace SyntaxManager
 {
-    const std::vector<std::string> illegalRepeats = { "Keyword", "Identifier", "Numeric", "String", "Operator" };
+    const std::vector<std::string> illegalRepeats = { "Keyword", "Identifier", "Number", "String", "Operator" };
 
     const std::unordered_map<std::string, std::vector<std::string>> expectedAfter = {
         { "Keyword", { "Null" } },
         { "Identifier", { "Operator", "Punctuation" } },
         { "Type", { "Identifier" } },
-        { "Punctuation", { "Identifier", "Numeric", "String", "Operator", "Punctuation" } },
-        { "Operator", { "Identifier", "Numeric", "String", "Punctuation" } },
-        { "Numeric", { "Operator", "Punctuation" } },
+        { "Punctuation", { "Identifier", "Number", "String", "Operator", "Punctuation" } },
+        { "Operator", { "Identifier", "Number", "String", "Punctuation" } },
+        { "Number", { "Operator", "Punctuation" } },
         { "String", { "Operator", "Punctuation" } }
     };
 
@@ -98,7 +98,7 @@ namespace SyntaxManager
         {
             if (token->GetType() == "Operator")
                 operatorCount++;
-            else if (token->GetType() == "Numeric" || token->GetType() == "String" || token->GetType() == "Identifier")
+            else if (token->GetType() == "Number" || token->GetType() == "String" || token->GetType() == "Identifier")
                 operandCount++;
             else if (token->GetValue() == "(")
                 leftParanthesisCount++;

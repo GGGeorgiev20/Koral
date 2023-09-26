@@ -1,6 +1,7 @@
 #include "./TokenManager.hpp"
 
-namespace TokenManager {
+namespace TokenManager
+{
     std::string GetTypeByIndex(const std::vector<std::shared_ptr<Token>>& tokens, const size_t& index)
     {
         if (index < tokens.size())

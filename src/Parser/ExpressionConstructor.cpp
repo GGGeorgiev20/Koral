@@ -1,6 +1,6 @@
-#include "./ExpressionManager.hpp"
+#include "./ExpressionConstructor.hpp"
 
-namespace ExpressionManager
+namespace ExpressionConstructor
 {
     const std::unordered_map<char, int> precedence = {
         {'*', 1},
@@ -14,16 +14,46 @@ namespace ExpressionManager
     {
         auto postfix = ConvertToPostfix(expression);
 
-        printf("Postfix: ");
-        for (auto& token : postfix)
+        auto node = ConstructExpression(postfix);
+
+        return node;
+    }
+
+    std::shared_ptr<Node> ConstructExpression(std::vector<std::shared_ptr<Token>>& expression)
+    {
+        std::vector<std::shared_ptr<Node>> stack;
+
+        for (auto& token : expression)
         {
-            printf("%s", token->GetValue().c_str());
+            if (token->GetType() == "Number" || token->GetType() == "String")
+            {
+                auto node = NodeManager::CreateNode<Literal>({ token->GetValue(), token->GetType() });
+
+                stack.push_back(node);
+            }
+            else if (token->GetType() == "Identifier")
+            {
+                auto node = NodeManager::CreateNode<VariableReference>({ token->GetValue() });
+
+                stack.push_back(node);
+            }
+            else if (token->GetType() == "Operator")
+            {
+                auto right = stack.back();
+                stack.pop_back();
+
+                auto left = stack.back();
+                stack.pop_back();
+
+                auto node = NodeManager::CreateNode<BinaryExpression>({ left, right, token->GetValue() });
+
+                stack.push_back(node);
+            }
         }
-        printf("\n");
 
-        // std::stack<std::shared_ptr<Node>> stack;
+        auto node = stack.back();
 
-        return nullptr;
+        return node;
     }
 
     std::vector<std::shared_ptr<Token>> ConvertToPostfix(std::vector<std::shared_ptr<Token>>& expression)
