@@ -7,7 +7,7 @@ class AssignmentExpression : public Node
 public:
     DEFINE_NODE(AssignmentExpression, 1)
 
-    AssignmentExpression(const std::vector<std::any>& attributes);
+    AssignmentExpression(std::vector<std::any> attributes);
 
     void Execute() override;
 

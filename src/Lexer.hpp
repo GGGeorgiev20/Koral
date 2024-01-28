@@ -26,7 +26,7 @@ public:
 
     bool AreForwarded(std::vector<std::shared_ptr<Token>> tokens, std::vector<std::string> expected);
 
-    void AddToken(std::string& lexeme, size_t& line);
+    void AddToken(std::string& lexeme, size_t line);
 
 private:
     std::string content;

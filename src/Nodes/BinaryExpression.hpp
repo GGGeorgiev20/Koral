@@ -7,7 +7,7 @@ class BinaryExpression : public Node
 public:
     DEFINE_NODE(BinaryExpression, 3)
 
-    BinaryExpression(const std::vector<std::any>& attributes);
+    BinaryExpression(std::vector<std::any> attributes);
 
     void Execute() override;
 

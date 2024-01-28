@@ -1,8 +1,8 @@
-#include "./TokenManager.hpp"
+#include "TokenManager.hpp"
 
 namespace TokenManager
 {
-    std::string GetTypeByIndex(const std::vector<std::shared_ptr<Token>>& tokens, const size_t& index)
+    std::string GetTypeByIndex(std::vector<std::shared_ptr<Token>> tokens, size_t index)
     {
         if (index < tokens.size())
             return tokens[index]->GetType();
@@ -10,7 +10,7 @@ namespace TokenManager
             return "Null";
     }
 
-    std::string GetValueByIndex(const std::vector<std::shared_ptr<Token>>& tokens, const size_t& index)
+    std::string GetValueByIndex(std::vector<std::shared_ptr<Token>> tokens, size_t index)
     {
         if (index < tokens.size())
             return tokens[index]->GetValue();

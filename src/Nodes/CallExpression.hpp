@@ -7,7 +7,7 @@ class CallExpression : public Node
 public:
     DEFINE_NODE(CallExpression, 2)
 
-    CallExpression(const std::vector<std::any>& attributes);
+    CallExpression(std::vector<std::any> attributes);
 
     void Execute() override;
 

@@ -7,7 +7,7 @@ class Literal : public Node
 public:
     DEFINE_NODE(Literal, 2)
 
-    Literal(const std::vector<std::any>& attributes);
+    Literal(std::vector<std::any> attributes);
 
     void Execute() override;
 

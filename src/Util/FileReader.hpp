@@ -9,7 +9,7 @@
 class FileReader
 {
 public:
-    FileReader(const std::string& filename) : filename(filename) {};
+    FileReader(std::string filename) : filename(filename) {};
 
     std::string Read();
 

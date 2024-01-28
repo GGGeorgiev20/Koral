@@ -11,7 +11,7 @@ class VariableDeclaration : public Node
 public:
     DEFINE_NODE(VariableDeclaration, 2)
 
-    VariableDeclaration(const std::vector<std::any>& attributes);
+    VariableDeclaration(std::vector<std::any> attributes);
 
     void Execute() override;
 

@@ -1,6 +1,6 @@
 #include "AssignmentExpression.hpp"
 
-AssignmentExpression::AssignmentExpression(const std::vector<std::any>& attributes)
+AssignmentExpression::AssignmentExpression(std::vector<std::any> attributes)
 {
     assert(attributes.size() == attributesCount);
 

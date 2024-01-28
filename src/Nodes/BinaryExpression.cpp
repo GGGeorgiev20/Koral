@@ -1,6 +1,6 @@
 #include "BinaryExpression.hpp"
 
-BinaryExpression::BinaryExpression(const std::vector<std::any>& attributes)
+BinaryExpression::BinaryExpression(std::vector<std::any> attributes)
 {
     assert(attributes.size() == attributesCount);
 

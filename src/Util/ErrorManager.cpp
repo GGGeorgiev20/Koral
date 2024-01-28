@@ -16,22 +16,25 @@ std::string ErrorManager::CheckFile()
     if (argc > 2)
         FileError("too many arguments");
     
-    if (std::string(argv[1]).find(".kor") == std::string::npos)
-        FileError("invalid file extension");
-    
     this->filename = argv[1];
+
+    size_t dotPosition = filename.find_last_of('.');
+    std::string extension = filename.substr(dotPosition + 1);
+
+    if (extension != "kor" || dotPosition == std::string::npos)
+        FileError("invalid file extension");
 
     return filename;
 }
 
-void ErrorManager::FileError(const std::string& message)
+void ErrorManager::FileError(std::string message)
 {
     printf("koral: fatal error: %s\n", message.c_str());
     printf("compilation terminated.\n");
     exit(1);
 }
 
-void ErrorManager::SyntaxError(const std::string& message, const size_t& line)
+void ErrorManager::SyntaxError(std::string message, size_t line)
 {
     PrintRed("SyntaxError");
     printf(": %s (", message.c_str());
@@ -42,7 +45,7 @@ void ErrorManager::SyntaxError(const std::string& message, const size_t& line)
     exit(1);
 }
 
-void ErrorManager::RuntimeError(const std::string& message, const size_t& line)
+void ErrorManager::RuntimeError(std::string message, size_t line)
 {
     PrintRed("RuntimeError");
     printf(": %s (", message.c_str());
@@ -53,7 +56,7 @@ void ErrorManager::RuntimeError(const std::string& message, const size_t& line)
     exit(1);
 }
 
-void ErrorManager::PrintRed(const std::string& message)
+void ErrorManager::PrintRed(std::string message)
 {
     printf("\033[1;31m");
     printf("%s", message.c_str());

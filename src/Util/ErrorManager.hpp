@@ -22,13 +22,13 @@ public:
 
     std::string CheckFile();
 
-    void FileError(const std::string& message);
+    void FileError(std::string message);
 
-    void SyntaxError(const std::string& message, const size_t& line);
+    void SyntaxError(std::string message, size_t line);
 
-    void RuntimeError(const std::string& message, const size_t& line = -1);
+    void RuntimeError(std::string message, size_t line = -1);
 
-    void PrintRed(const std::string& message);
+    void PrintRed(std::string message);
 
 private:
     static std::shared_ptr<ErrorManager> instance;

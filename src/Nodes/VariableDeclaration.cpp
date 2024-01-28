@@ -1,6 +1,6 @@
 #include "VariableDeclaration.hpp"
 
-VariableDeclaration::VariableDeclaration(const std::vector<std::any>& attributes)
+VariableDeclaration::VariableDeclaration(std::vector<std::any> attributes)
 {
     assert(attributes.size() == attributesCount);
 

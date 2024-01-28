@@ -1,6 +1,6 @@
 #include "Literal.hpp"
 
-Literal::Literal(const std::vector<std::any>& attributes)
+Literal::Literal(std::vector<std::any> attributes)
 {
     assert(attributes.size() == attributesCount);
 

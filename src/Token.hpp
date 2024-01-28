@@ -6,10 +6,10 @@
 class Token
 {
 public:
-    Token(std::string& value, size_t& line);
+    Token(std::string value, size_t line);
 
-    void SetType(std::string& type) { this->type = type; }
-    void SetValue(std::string& value) { this->value = value; }
+    void SetType(std::string type) { this->type = type; }
+    void SetValue(std::string value) { this->value = value; }
 
     std::string GetType() { return type; }
     std::string GetValue() { return value; }

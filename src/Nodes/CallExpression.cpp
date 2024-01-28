@@ -1,6 +1,6 @@
 #include "CallExpression.hpp"
 
-CallExpression::CallExpression(const std::vector<std::any>& attributes)
+CallExpression::CallExpression(std::vector<std::any> attributes)
 {
     assert(attributes.size() == attributesCount);
 

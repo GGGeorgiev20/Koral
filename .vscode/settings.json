@@ -51,6 +51,10 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "fstream": "cpp"
-    }
+        "fstream": "cpp",
+        "functional": "cpp"
+    },
+    "cSpell.words": [
+        "koral"
+    ]
 }

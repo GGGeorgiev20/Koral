@@ -6,7 +6,7 @@
 class Interpreter
 {
 public:
-    Interpreter(const std::vector<std::shared_ptr<Node>>& AST) : AST(AST) {};
+    Interpreter(std::vector<std::shared_ptr<Node>> AST) : AST(AST) {};
 
     void ExecuteNodes();
 

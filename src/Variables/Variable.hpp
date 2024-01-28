@@ -15,10 +15,13 @@ public:
         this->identifier = identifier;
         this->value = value;
     }
+    
     ~Variable() = default;
 
     std::string GetType() const { return type; };
+
     std::string GetIdentifier() const { return identifier; }
+    
     std::any GetValue() const { return value; }
 
     void SetValue(std::any value) { this->value = value; }

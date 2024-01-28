@@ -1,4 +1,4 @@
-#include "./ExpressionConstructor.hpp"
+#include "ExpressionConstructor.hpp"
 
 namespace ExpressionConstructor
 {
@@ -10,7 +10,7 @@ namespace ExpressionConstructor
         {'-', 2}
     };
 
-    std::shared_ptr<Node> GetBinaryExpression(std::vector<std::shared_ptr<Token>>& expression)
+    std::shared_ptr<Node> GetBinaryExpression(std::vector<std::shared_ptr<Token>> expression)
     {
         auto postfix = ConvertToPostfix(expression);
 
@@ -19,7 +19,7 @@ namespace ExpressionConstructor
         return node;
     }
 
-    std::shared_ptr<Node> ConstructExpression(std::vector<std::shared_ptr<Token>>& expression)
+    std::shared_ptr<Node> ConstructExpression(std::vector<std::shared_ptr<Token>> expression)
     {
         std::vector<std::shared_ptr<Node>> stack;
 
@@ -56,11 +56,11 @@ namespace ExpressionConstructor
         return node;
     }
 
-    std::vector<std::shared_ptr<Token>> ConvertToPostfix(std::vector<std::shared_ptr<Token>>& expression)
+    std::vector<std::shared_ptr<Token>> ConvertToPostfix(std::vector<std::shared_ptr<Token>> expression)
     {
         std::vector<std::shared_ptr<Token>> postfix;
 
-        // Stack used to store operators
+        // Stack used to store operators (vector is used, so searching is possible)
         std::vector<std::shared_ptr<Token>> stack;
 
         for (auto& token : expression)

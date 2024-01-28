@@ -1,6 +1,6 @@
 #include "Lexer.hpp"
 
-Token::Token(std::string& value, size_t& line)
+Token::Token(std::string value, size_t line)
 {
     this->value = value;
     this->line = line;
@@ -29,7 +29,9 @@ void Lexer::Scan()
         for (auto character : line)
         {
             if (character == '"')
+            {
                 inString = !inString;
+            }
 
             if (inString)
             {
@@ -47,7 +49,9 @@ void Lexer::Scan()
                 else if (std::find(punctuation.begin(), punctuation.end(), character) != punctuation.end())
                 {
                     if (lexeme != "")
+                    {
                         AddToken(lexeme, i);
+                    }
 
                     lexeme += character;
                     AddToken(lexeme, i);
@@ -55,18 +59,24 @@ void Lexer::Scan()
                 else if (std::find(operators.begin(), operators.end(), character) != operators.end())
                 {
                     if (lexeme != "")
+                    {
                         AddToken(lexeme, i);
+                    }
 
                     lexeme += character;
                     AddToken(lexeme, i);
                 }
                 else
+                {
                     lexeme += character;
+                }
             }
         }
 
         if (lexeme != "")
+        {
             AddToken(lexeme, i);
+        }
     }
 }
 
@@ -180,7 +190,7 @@ bool Lexer::AreForwarded(std::vector<std::shared_ptr<Token>> tokens, std::vector
     return true;
 }
 
-void Lexer::AddToken(std::string& lexeme, size_t& line)
+void Lexer::AddToken(std::string& lexeme, size_t line)
 {
     auto token = std::make_shared<Token>(lexeme, line);
     tokens.push_back(token);

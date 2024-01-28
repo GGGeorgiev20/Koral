@@ -7,7 +7,7 @@ class VariableReference : public Node
 public:
     DEFINE_NODE(VariableReference, 1)
 
-    VariableReference(const std::vector<std::any>& attributes);
+    VariableReference(std::vector<std::any> attributes);
 
     void Execute() override;
 

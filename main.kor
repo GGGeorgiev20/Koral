@@ -1,1 +1,1 @@
-int main = say(sum(2), 5);
+int main = say(2 + 2);

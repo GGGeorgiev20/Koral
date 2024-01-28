@@ -1,6 +1,6 @@
 #include "VariableReference.hpp"
 
-VariableReference::VariableReference(const std::vector<std::any>& attributes)
+VariableReference::VariableReference(std::vector<std::any> attributes)
 {
     assert(attributes.size() == attributesCount);
 
