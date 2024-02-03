@@ -5,6 +5,10 @@
 #include <vector>
 #include <string>
 
+#include "Errors.hpp"
+
+#include "../Util/ArgumentManager.hpp"
+
 class ErrorManager
 {
 public:
@@ -18,10 +22,6 @@ public:
         return instance;
     }
 
-    void SetArgs(int argc, char** argv);
-
-    std::string CheckFile();
-
     void FileError(std::string message);
 
     void SyntaxError(std::string message, size_t line);
@@ -32,9 +32,4 @@ public:
 
 private:
     static std::shared_ptr<ErrorManager> instance;
-
-    int argc;
-    char** argv;
-
-    std::string filename;
 };

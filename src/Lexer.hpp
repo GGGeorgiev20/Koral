@@ -1,11 +1,11 @@
 #pragma once
 
-#include "./Token.hpp"
-
-#include <algorithm>
-#include <memory>
 #include <vector>
+#include <memory>
 #include <cassert>
+#include <algorithm>
+
+#include "Token.hpp"
 
 class Lexer
 {
@@ -19,6 +19,8 @@ public:
     void Evaluate();
 
     void PostProcess();
+
+    void ProccessCharacter(char character, std::string& lexeme, bool& inString, size_t line);
 
     std::string DetermineType(std::string lexeme);
 

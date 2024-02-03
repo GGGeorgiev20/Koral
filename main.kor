@@ -1,1 +1,1 @@
-int main = say(2 + 2);
+int main = say("This is a string");

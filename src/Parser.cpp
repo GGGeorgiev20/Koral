@@ -58,37 +58,44 @@ void Parser::GenerateAST()
 
     for (auto line : tokensLines)
     {
-        for (size_t i = 0; i < line.size() - 1; i++)
+        ProcessLine(line);
+    }
+}
+
+void Parser::ProcessLine(std::vector<std::shared_ptr<Token>> line)
+{
+    for (size_t i = 0; i < line.size() - 1; i++)
+    {
+        auto token = line[i];
+
+        std::vector<std::function<std::shared_ptr<Node>(std::vector<std::shared_ptr<Token>>, size_t& iterator)>> constructors =
         {
-            auto token = line[i];
+            NodeConstructor::CheckVariableDeclaration,
+            NodeConstructor::CheckCallExpression,
+            NodeConstructor::CheckAssignmentExpression,
+            NodeConstructor::CheckBinaryExpression
+        };
 
-            std::vector<std::function<std::shared_ptr<Node>(std::vector<std::shared_ptr<Token>>, size_t& iterator)>> constructors =
+        std::vector<std::shared_ptr<Token>> lineOnwards(line.begin() + i, line.end()); 
+
+        // TODO: Rework semicolons (need to be expected at end of expression, not line)
+        if (TokenManager::GetValueByIndex(line, line.size() - 1) != ";")
+            SYNTAX_ERROR(SEMICOLON_EXPECTED, token->GetLine());
+
+        if (token->GetValue() == ";")
+            SYNTAX_ERROR(SEMICOLON_UNEXPECTED, token->GetLine());
+
+        for (auto NodeConstructor : constructors)
+        {
+            auto node = NodeConstructor(lineOnwards, i);
+
+            if (node == nullptr)
             {
-                NodeConstructor::CheckVariableDeclaration,
-                NodeConstructor::CheckCallExpression,
-                NodeConstructor::CheckAssignmentExpression,
-                NodeConstructor::CheckBinaryExpression
-            };
-
-            std::vector<std::shared_ptr<Token>> lineOnwards(line.begin() + i, line.end()); 
-
-            // TODO: Rework semicolons (need to be expected at end of expression, not line)
-            if (TokenManager::GetValueByIndex(line, line.size() - 1) != ";")
-                SYNTAX_ERROR("Expected semicolon at end of line", token->GetLine());
-
-            if (token->GetValue() == ";")
-                SYNTAX_ERROR("Unexpected semicolon", token->GetLine());
-
-            for (auto NodeConstructor : constructors)
-            {
-                auto node = NodeConstructor(lineOnwards, i);
-
-                if (node != nullptr)
-                {
-                    AST.push_back(node);
-                    break;
-                }
+                continue;
             }
+
+            AST.push_back(node);
+            break;
         }
     }
 }

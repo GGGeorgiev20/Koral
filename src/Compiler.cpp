@@ -2,16 +2,16 @@
 
 Compiler::Compiler(int argc, char* argv[])
 {
-    errorManager = ErrorManager::GetInstance();
+    auto argumentManager = ArgumentManager::GetInstance();
 
-    errorManager->SetArgs(argc, argv);
+    argumentManager->SetArgs(argc, argv);
 
-    this->filename = errorManager->CheckFile();
+    this->filename = argumentManager->GetFilename();
 }
 
 void Compiler::ReadFile()
 {
-    reader = std::make_shared<FileReader>(filename);
+    auto reader = std::make_shared<FileReader>(filename);
 
     std::string content = reader->Read();
 
@@ -20,7 +20,7 @@ void Compiler::ReadFile()
 
 void Compiler::LexContent()
 {
-    lexer = std::make_shared<Lexer>(content);
+    auto lexer = std::make_shared<Lexer>(content);
 
     auto tokens = lexer->Lex();
 
@@ -29,7 +29,7 @@ void Compiler::LexContent()
 
 void Compiler::ParseTokens()
 {
-    parser = std::make_shared<Parser>(tokens);
+    auto parser = std::make_shared<Parser>(tokens);
 
     auto tree = parser->Parse();
 
@@ -38,7 +38,7 @@ void Compiler::ParseTokens()
 
 void Compiler::InterpretTree()
 {
-    interpreter = std::make_shared<Interpreter>(AST);
+    auto interpreter = std::make_shared<Interpreter>(AST);
 
     interpreter->ExecuteNodes();
 }
@@ -48,6 +48,11 @@ void Compiler::Compile()
     this->ReadFile();
 
     this->LexContent();
+
+    for (auto token : tokens)
+    {
+        printf("%s - %s (%lld)\n", token->GetValue().c_str(), token->GetType().c_str(), token->GetLine() + 1);
+    }
 
     this->ParseTokens();
 

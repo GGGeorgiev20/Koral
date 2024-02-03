@@ -54,14 +54,14 @@ namespace NodeConstructor
             value = TokenManager::GetValueByIndex(tokens, localIterator);
             
             if (value == ";" || value == "Null")
-                SYNTAX_ERROR("Expected end at call expression", token->GetLine());
+                SYNTAX_ERROR(CALL_EXPECTED_END, token->GetLine());
             
             if (value == ")")
             {
                 if (currentArgument.size() != 0)
                 {
                     if (!SyntaxManager::IsExpressionValid(currentArgument))
-                        SYNTAX_ERROR("Expression is not valid", token->GetLine());
+                        SYNTAX_ERROR(EXPRESSION_NOT_VALID, token->GetLine());
 
                     auto expression = ExpressionConstructor::GetBinaryExpression(currentArgument);
 
@@ -76,10 +76,10 @@ namespace NodeConstructor
             if (value == ",")
             {
                 if (currentArgument.size() == 0)
-                    SYNTAX_ERROR("Expected value at call expression", token->GetLine());
+                    SYNTAX_ERROR(CALL_EXPECTED_VALUE, token->GetLine());
 
                 if (!SyntaxManager::IsExpressionValid(currentArgument))
-                    SYNTAX_ERROR("Expression is not valid", token->GetLine());
+                    SYNTAX_ERROR(EXPRESSION_NOT_VALID, token->GetLine());
 
                 auto expression = ExpressionConstructor::GetBinaryExpression(currentArgument);
 
@@ -149,7 +149,7 @@ namespace NodeConstructor
             value = TokenManager::GetValueByIndex(tokens, localIterator);
 
             if (value == "Null")
-                SYNTAX_ERROR("Expected end of expression", token->GetLine());
+                SYNTAX_ERROR(EXPRESSION_EXPECTED_END, token->GetLine());
 
             if (value == ";")
                 break;
@@ -160,7 +160,7 @@ namespace NodeConstructor
         }
 
         if (!SyntaxManager::IsExpressionValid(expression))
-            SYNTAX_ERROR("Expression is not valid", token->GetLine());
+            SYNTAX_ERROR(EXPRESSION_NOT_VALID, token->GetLine());
 
         iterator += localIterator;
 

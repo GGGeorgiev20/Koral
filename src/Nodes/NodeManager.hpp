@@ -1,8 +1,8 @@
 #pragma once
 
+#include "AssignmentExpression.hpp"
 #include "BinaryExpression.hpp"
 #include "CallExpression.hpp"
-#include "AssignmentExpression.hpp"
 #include "Literal.hpp"
 #include "VariableDeclaration.hpp"
 #include "VariableReference.hpp"

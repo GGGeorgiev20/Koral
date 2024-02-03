@@ -28,49 +28,7 @@ void Lexer::Scan()
 
         for (auto character : line)
         {
-            if (character == '"')
-            {
-                inString = !inString;
-            }
-
-            if (inString)
-            {
-                lexeme += character;
-            }
-            else
-            {
-                if (character == ' ')
-                {
-                    if (lexeme != "")
-                    {
-                        AddToken(lexeme, i);
-                    }
-                }
-                else if (std::find(punctuation.begin(), punctuation.end(), character) != punctuation.end())
-                {
-                    if (lexeme != "")
-                    {
-                        AddToken(lexeme, i);
-                    }
-
-                    lexeme += character;
-                    AddToken(lexeme, i);
-                }
-                else if (std::find(operators.begin(), operators.end(), character) != operators.end())
-                {
-                    if (lexeme != "")
-                    {
-                        AddToken(lexeme, i);
-                    }
-
-                    lexeme += character;
-                    AddToken(lexeme, i);
-                }
-                else
-                {
-                    lexeme += character;
-                }
-            }
+            ProccessCharacter(character, lexeme, inString, i);
         }
 
         if (lexeme != "")
@@ -78,6 +36,46 @@ void Lexer::Scan()
             AddToken(lexeme, i);
         }
     }
+}
+
+void Lexer::ProccessCharacter(char character, std::string& lexeme, bool& inString, size_t line)
+{
+    if (character == '\"' || character == '\'')
+    {
+        inString = !inString;
+    }
+
+    if (inString)
+    {
+        lexeme += character;
+        return;
+    }
+
+    if (character == ' ')
+    {
+        if (lexeme != "")
+        {
+            AddToken(lexeme, line);
+        }
+
+        return;
+    }
+    
+    if (std::find(punctuation.begin(), punctuation.end(), character) != punctuation.end() ||
+        std::find(operators.begin(), operators.end(), character) != operators.end())
+    {
+        if (lexeme != "")
+        {
+            AddToken(lexeme, line);
+        }
+
+        lexeme += character;
+        AddToken(lexeme, line);
+
+        return;
+    }
+
+    lexeme += character;
 }
 
 void Lexer::Evaluate()
@@ -117,7 +115,7 @@ void Lexer::PostProcess()
         {
             if (token->GetValue() == ".")
             {
-                std::string value = tokens[i - 1]->GetValue() + token->GetValue() + nextToken->GetValue();
+                std::string value = previousToken->GetValue() + token->GetValue() + nextToken->GetValue();
                 nextToken->SetValue(value);
 
                 tokens.erase(tokens.begin() + i);
@@ -144,7 +142,8 @@ std::string Lexer::DetermineType(std::string lexeme)
     if (lexeme[0] == '"' || lexeme[0] == '\'')
         return "String";
     
-    try {
+    try
+    {
         std::stoi(lexeme);
         return "Number";
     }
@@ -163,14 +162,16 @@ std::vector<std::string> Lexer::ReadLines()
 
     for (size_t i = 0; i < content.length(); i++)
     {
-        if (content[i] == '\n')
+        if (content[i] != '\n')
         {
-            lines.push_back(line);
-            line = "";
-        }
-        else
             line += content[i];
+            continue;
+        }
+
+        lines.push_back(line);
+        line = "";
     }
+
     lines.push_back(line);
 
     return lines;
@@ -179,12 +180,16 @@ std::vector<std::string> Lexer::ReadLines()
 bool Lexer::AreForwarded(std::vector<std::shared_ptr<Token>> tokens, std::vector<std::string> expected)
 {
     if (tokens.size() != expected.size())
+    {
         return false;
+    }
     
     for (size_t i = 0; i < tokens.size(); i++)
     {
         if (tokens[i]->GetType() != expected[i])
+        {
             return false;
+        }
     }
 
     return true;
@@ -193,6 +198,8 @@ bool Lexer::AreForwarded(std::vector<std::shared_ptr<Token>> tokens, std::vector
 void Lexer::AddToken(std::string& lexeme, size_t line)
 {
     auto token = std::make_shared<Token>(lexeme, line);
+    
     tokens.push_back(token);
+
     lexeme = "";
 }

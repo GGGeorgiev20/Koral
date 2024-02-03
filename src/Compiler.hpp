@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Interpreter.hpp"
-#include "./Util/FileReader.hpp"
+
+#include "Util/FileReader.hpp"
+#include "Util/ArgumentManager.hpp"
 
 class Compiler
 {
@@ -19,16 +21,11 @@ public:
     void Compile();
 
 private:
-    std::shared_ptr<FileReader> reader;
-    std::shared_ptr<ErrorManager> errorManager;
-
-    std::shared_ptr<Lexer> lexer;
-    std::shared_ptr<Parser> parser;
-    std::shared_ptr<Interpreter> interpreter;
+    std::vector<std::shared_ptr<Token>> tokens;
+    std::vector<std::shared_ptr<Node>> AST;
 
     std::string filename;
     std::string content;
 
-    std::vector<std::shared_ptr<Token>> tokens;
-    std::vector<std::shared_ptr<Node>> AST;
+    bool inDevMode = true;
 };

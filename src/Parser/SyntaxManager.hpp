@@ -1,12 +1,13 @@
 #pragma once
 
-#include "../Token.hpp"
-#include "../Util/ErrorManager.hpp"
-
 #include <algorithm>
 #include <memory>
 #include <vector>
 #include <unordered_map>
+
+#include "../Token.hpp"
+
+#include "../Logs/ErrorManager.hpp"
 
 // TODO: Rework the whole syntax manager
 

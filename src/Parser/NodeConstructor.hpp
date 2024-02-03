@@ -1,16 +1,16 @@
 #pragma once
 
-#include "../Util/ErrorManager.hpp"
-#include "../Nodes/NodeManager.hpp"
+#include <algorithm>
 
-#include "./TokenManager.hpp"
-#include "./SyntaxManager.hpp"
-#include "./ExpressionConstructor.hpp"
+#include "TokenManager.hpp"
+#include "SyntaxManager.hpp"
+#include "ExpressionConstructor.hpp"
 
 #include "../Token.hpp"
 
-#include <algorithm>
- 
+#include "../Logs/ErrorManager.hpp"
+#include "../Nodes/NodeManager.hpp"
+
 namespace NodeConstructor
 {
     std::shared_ptr<Node> CheckVariableDeclaration(std::vector<std::shared_ptr<Token>> tokens, size_t& iterator);

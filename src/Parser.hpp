@@ -2,13 +2,13 @@
 
 #include <functional>
 
-#include "./Lexer.hpp"
-#include "./Nodes/NodeManager.hpp"
+#include "Lexer.hpp"
+#include "Nodes/NodeManager.hpp"
 
-#include "./Parser/NodeConstructor.hpp"
-#include "./Parser/ExpressionConstructor.hpp"
-#include "./Parser/SyntaxManager.hpp"
-#include "./Parser/TokenManager.hpp"
+#include "Parser/NodeConstructor.hpp"
+#include "Parser/ExpressionConstructor.hpp"
+#include "Parser/SyntaxManager.hpp"
+#include "Parser/TokenManager.hpp"
 
 class Parser
 {
@@ -20,6 +20,8 @@ public:
     void AnalyzeSyntax();
 
     void GenerateAST();
+
+    void ProcessLine(std::vector<std::shared_ptr<Token>> line);
 
     std::vector<std::vector<std::shared_ptr<Token>>> GetTokensLines();
    

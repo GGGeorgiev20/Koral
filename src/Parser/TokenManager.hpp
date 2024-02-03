@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Token.hpp"
-
 #include <string>
 #include <vector>
 #include <memory>
+
+#include "../Token.hpp"
 
 namespace TokenManager
 {

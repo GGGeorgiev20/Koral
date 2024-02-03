@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "ErrorManager.hpp"
+#include "../Logs/ErrorManager.hpp"
 
 class FileReader
 {
