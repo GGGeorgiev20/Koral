@@ -1,0 +1,10 @@
+CompileFlags:
+  Add: [Wall, -Wextra, -Wpedantic, -Wno-deprecated-declarations, -std=c++23]
+InlayHints:
+  ParameterNames: No
+  DeducedTypes: No
+Diagnostics:
+  UnusedIncludes: Strict
+  ClangTidy:
+    Add: [bugprone-*, cert-*, modernize-*, performance-*]
+    Remove: [bugprone-easily-swappable-parameters, modernize-use-trailing-return-type, modernize-use-ranges]
