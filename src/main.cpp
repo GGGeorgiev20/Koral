@@ -1,15 +1,27 @@
-#include "Compiler.hpp"
+#include "Utils/Utils.hpp"
+#include "Utils/Logger.hpp"
+#include "Core/Lexer/Lexer.hpp"
+
+#include <memory>
+#include <cassert>
+#include <filesystem>
 
 int main(int argc, char* argv[])
 {
-    // TODO: Implement the new build system into the Koral compiler
+    // todo: argument manager
+    nassert(argc >= 2, "Argument count is less than two");
+    nassert(std::filesystem::exists(argv[1]), "File doesn't exist");
 
-    // TODO: Add a logging module, that works only in dev mode
-    // NOTE: Will also be good to add a list of errors, so all instances of an error can be changed at one time
+    std::string content = Utils::ReadFileContent(argv[1]);
+    nassert(!content.empty(), "File content is empty");
 
-    Compiler *compiler = new Compiler(argc, argv);
+    auto lexer = std::make_unique<Lexer>(content);
+    auto tokens = lexer->Scan();
 
-    compiler->Compile();
+    for (const auto& token : tokens)
+    {
+        Logger::Debug(fmt::format("Line {}: Type {} - Value {}", token.line, token.type, token.value));
+    }
 
     return 0;
 }

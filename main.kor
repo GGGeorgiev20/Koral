@@ -1,1 +1,5 @@
-int main = say("This is a string");
+language ArithLang {
+    syntax {
+        program -> statement * ;
+    }
+}
