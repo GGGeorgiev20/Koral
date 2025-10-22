@@ -92,10 +92,22 @@ void Lexer::Consume()
             }
             else this->AddToken(TOKEN_ASSIGN, "=", m_line);
             break;
-        case '<':
-            this->AddToken(TOKEN_LT, "<", m_line); break;
         case '>':
-            this->AddToken(TOKEN_GT, ">", m_line); break;
+            if (this->Peek() == '=')
+            {
+                this->Next();
+                this->AddToken(TOKEN_GTE, ">=", m_line);
+            }
+            else this->AddToken(TOKEN_GT, ">", m_line);
+            break;
+        case '<':
+            if (this->Peek() == '=')
+            {
+                this->Next();
+                this->AddToken(TOKEN_LTE, "<=", m_line);
+            }
+            else this->AddToken(TOKEN_LT, "<", m_line);
+            break;
         case '&':
             if (this->Peek() == '&')
             {
@@ -128,6 +140,8 @@ void Lexer::Consume()
             this->AddToken(TOKEN_COLON, ":", m_line); break;
         case '.':
             this->AddToken(TOKEN_DOT, ".", m_line); break;
+        case ',':
+            this->AddToken(TOKEN_COMMA, ",", m_line); break;
         case '(':
             this->AddToken(TOKEN_LPAREN, "(", m_line); break;
         case ')':

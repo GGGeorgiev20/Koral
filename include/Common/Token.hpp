@@ -8,6 +8,11 @@ struct Token
     uint8_t type;
     std::string value;
     size_t line;
+
+    bool operator==(const Token& other) const noexcept
+    {
+        return type == other.type && value == other.value && line == other.line;
+    }
 };
 
 enum : uint8_t

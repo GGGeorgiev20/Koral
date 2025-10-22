@@ -4,3 +4,5 @@ build
 .cache
 compile_commands.json
 CMakeUserPresets.json
+tests/Testing
+vcpkg_installed
