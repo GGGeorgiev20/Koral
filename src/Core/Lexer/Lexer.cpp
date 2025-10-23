@@ -253,28 +253,49 @@ void Lexer::ReadIdentifier()
 
 void Lexer::ReadString()
 {
-    size_t start = m_pos + 1;
+    std::string lex = "";
     bool escaped = false;
 
     this->Next();
 
-    while (m_char != '"' && m_char != '\0')
+    while ((m_char != '"' || escaped) && m_char != '\0')
     {
-        if (m_char == '\\')
+        if (escaped)
+        {
+            lex += this->EscapeCharacter();
+            escaped = false;
+        }
+        else if (m_char == '\\')
         {
             escaped = true;
         }
-        if (m_char == '\n') ++m_line;
+        else
+        {
+            if (m_char == '\n') ++m_line;
+            lex += m_char;
+        }
+
         this->Next();
     }
 
     if (m_char != '"')
-        return this->AddToken(TOKEN_ILLEGAL, "unterminated", m_line);
+        return this->AddToken(TOKEN_UNTERMINATED, "", m_line);
 
-    std::string lex = m_content.substr(start, m_pos - start);
     this->AddToken(TOKEN_STRING, lex, m_line);
 
     this->Next();
+}
+
+char Lexer::EscapeCharacter()
+{
+    switch (m_char)
+    {
+        case 'n':  return '\n';
+        case 't':  return '\t';
+        case '"':  return '"';
+        case '\\': return '\\';break;
+        default:   return m_char;
+    }
 }
 
 void Lexer::ReadNumber()

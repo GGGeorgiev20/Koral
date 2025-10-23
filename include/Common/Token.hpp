@@ -20,6 +20,7 @@ enum : uint8_t
     // Special
     TOKEN_EOF,
     TOKEN_ILLEGAL,
+    TOKEN_UNTERMINATED,
 
     // ——— Literals ———
     TOKEN_IDENTIFIER, // variable/function names

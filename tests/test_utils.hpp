@@ -14,6 +14,8 @@ inline std::string TokenTypeToString(uint8_t type)
             return "TOKEN_EOF";
         case TOKEN_ILLEGAL:
             return "TOKEN_ILLEGAL";
+        case TOKEN_UNTERMINATED:
+            return "TOKEN_UNTERMINATED";
         case TOKEN_IDENTIFIER:
             return "TOKEN_IDENTIFIER";
         case TOKEN_NUMBER:

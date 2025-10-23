@@ -35,6 +35,8 @@ private:
 
     void ReadString();
 
+    char EscapeCharacter();
+
     void ReadNumber();
 
 private:

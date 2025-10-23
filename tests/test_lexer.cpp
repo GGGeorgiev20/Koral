@@ -6,7 +6,8 @@
 // NOTE: Tests are written by ChatGPT
 
 // 1️⃣ String literal
-TEST(LexerTest, LexesStringCorrect) {
+TEST(LexerTest, LexesStringCorrect)
+{
     std::string to_lex = "\"test\"";
     Lexer lexer(to_lex);
 
@@ -20,7 +21,8 @@ TEST(LexerTest, LexesStringCorrect) {
 }
 
 // 2️⃣ Identifier
-TEST(LexerTest, LexesIdentifier) {
+TEST(LexerTest, LexesIdentifier)
+{
     std::string to_lex = "variable";
     Lexer lexer(to_lex);
 
@@ -34,7 +36,8 @@ TEST(LexerTest, LexesIdentifier) {
 }
 
 // 3️⃣ Integer literal
-TEST(LexerTest, LexesIntegerLiteral) {
+TEST(LexerTest, LexesIntegerLiteral)
+{
     std::string to_lex = "42";
     Lexer lexer(to_lex);
 
@@ -48,7 +51,8 @@ TEST(LexerTest, LexesIntegerLiteral) {
 }
 
 // 4️⃣ Simple arithmetic
-TEST(LexerTest, LexesArithmeticExpression) {
+TEST(LexerTest, LexesArithmeticExpression)
+{
     std::string to_lex = "a + b * 5";
     Lexer lexer(to_lex);
 
@@ -66,7 +70,8 @@ TEST(LexerTest, LexesArithmeticExpression) {
 }
 
 // 5️⃣ Assignment and comparison
-TEST(LexerTest, LexesAssignmentAndComparison) {
+TEST(LexerTest, LexesAssignmentAndComparison)
+{
     std::string to_lex = "x = 10; y += 5; if (x >= y) x = y;";
     Lexer lexer(to_lex);
 
@@ -97,7 +102,8 @@ TEST(LexerTest, LexesAssignmentAndComparison) {
 }
 
 // 6️⃣ Parentheses and punctuation
-TEST(LexerTest, LexesFunctionCall) {
+TEST(LexerTest, LexesFunctionCall)
+{
     std::string to_lex = "print(a, b)";
     Lexer lexer(to_lex);
 
@@ -116,7 +122,8 @@ TEST(LexerTest, LexesFunctionCall) {
 }
 
 // 7️⃣ Handles comments
-TEST(LexerTest, IgnoresSingleLineComment) {
+TEST(LexerTest, IgnoresSingleLineComment)
+{
     std::string to_lex = "x = 1; // comment\n y = 2;";
     Lexer lexer(to_lex);
 
@@ -137,8 +144,9 @@ TEST(LexerTest, IgnoresSingleLineComment) {
 }
 
 // 8️⃣ Handles string with escaped quotes
-TEST(LexerTest, HandlesEscapedQuotes) {
-    std::string to_lex = "\"He said, \\\"hi\\\"\"";
+TEST(LexerTest, HandlesEscapedQuotes)
+{
+    std::string to_lex = R"("He said, \"hi\"")";
     Lexer lexer(to_lex);
 
     std::vector<Token> result = lexer.Scan();
@@ -151,7 +159,8 @@ TEST(LexerTest, HandlesEscapedQuotes) {
 }
 
 // 9️⃣ Multi-line input tracking
-TEST(LexerTest, TracksMultipleLines) {
+TEST(LexerTest, TracksMultipleLines)
+{
     std::string to_lex = "a = 1;\n\nb = 2;";
     Lexer lexer(to_lex);
 
@@ -172,7 +181,8 @@ TEST(LexerTest, TracksMultipleLines) {
 }
 
 // 🔟 Complex expression with operators
-TEST(LexerTest, LexesComplexExpression) {
+TEST(LexerTest, LexesComplexExpression)
+{
     std::string to_lex = "count = (a + b) * 2 - 5 / c;";
     Lexer lexer(to_lex);
 
